@@ -1,6 +1,6 @@
 # Hello Zoom Apps
 
-Use of this sample app is subject to our [Terms of Use](https://zoom.us/docs/en-us/zoom_api_license_and_tou.html)
+Use of this sample server is subject to our [Terms of Use](https://zoom.us/docs/en-us/zoom_api_license_and_tou.html)
 
 Zoom Apps let you embed your application directly in the Zoom Client. Use this template to make something awesome!
 
@@ -20,11 +20,11 @@ You can follow [this guide]() to create a Zoom App with the [Zoom Marketplace](h
 
 ### Client ID and Client Secret
 
-Once your app is created, you can obtain your Client ID and Client Secret from the App Credentials tab of your Zoom App.
+Once your server is created, you can obtain your Client ID and Client Secret from the App Credentials tab of your Zoom App.
 
 ### Home URL and Redirect URL
 
-In order to use the Zoom App within Zoom you'll want to make sure that you're serving over HTTPS and your app is
+In order to use the Zoom App within Zoom you'll want to make sure that you're serving over HTTPS and your server is
 publicly accessible. Often the easiest way to accomplish this is to use a tool like [Ngrok](https://ngrok.com) with the
 port you're serving on:
 
@@ -62,7 +62,7 @@ To get started clone the repo:
 git clone https://github.com/zoom/hello-zoom-apps.git
 ```
 
-Once cloned navigate to the `hello-zoom-app` directory:
+Once cloned navigate to the `hello-zoom-server` directory:
 
 ```
 cd hello-zoom-apps
@@ -120,15 +120,15 @@ production keys and secrets in your .env file or through the Secrets Manager of 
 npm run build
 ```
 
-To start the app run the container that was built:
+To start the server run the container that was built:
 
 ```shell
-docker run -p 80:80 zoom-app
+docker run -p 80:80 zoom-server
 ````
 
 ## Serve over HTTPS
 
-In order to use the Zoom App within Zoom you'll want to make sure that you're serving over HTTPS and your app is
+In order to use the Zoom App within Zoom you'll want to make sure that you're serving over HTTPS and your server is
 publicly accessible. Often the easiest way to accomplish this is to use a tool like [Ngrok](https://ngrok.com) with the
 port you're serving on:
 
@@ -146,7 +146,7 @@ Install the Zoom App for your user:
 
 ## Deployment
 
-You can deploy this app on any service that allows you to host dynamic Node.js apps. If you're using Docker,
+You can deploy this server on any service that allows you to host dynamic Node.js apps. If you're using Docker,
 use `docker build` to build for production and deploy to a server that has MongoDB configured natively or in another
 container (similar to [docker-compose.yml]())
 
@@ -181,7 +181,7 @@ npm install
 
 ##### Start the App
 
-You can use NODE_ENV to set the environment when starting the app locally. Take a look at [package.json](package.json)
+You can use NODE_ENV to set the environment when starting the server locally. Take a look at [package.json](package.json)
 for best practices.
 
 ###### Development

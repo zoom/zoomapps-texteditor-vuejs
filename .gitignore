@@ -57,7 +57,7 @@
 # Executables
 *.exe
 *.out
-*.app
+*.server
 
 ### VisualStudioCode template
 .vscode/*
@@ -648,7 +648,7 @@ csx/
 ecf/
 rcf/
 
-# Windows Store app package directories and files
+# Windows Store server package directories and files
 AppPackages/
 BundleArtifacts/
 Package.StoreAssociation.xml
@@ -801,9 +801,6 @@ FodyWeavers.xsd
 *.zip
 *.log.*
 *.sig
-
-pkg/
-src/
 
 ### AppEngine template
 # Google App Engine generated folder
