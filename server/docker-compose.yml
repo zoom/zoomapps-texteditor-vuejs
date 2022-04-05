@@ -9,8 +9,8 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASS}
-  zoom-app:
-      build: ./dist
+  server:
+      build: ./
       working_dir: /home/node/app
       container_name: 'zoom-app'
       environment:
@@ -18,6 +18,4 @@ services:
       ports:
         - "${PORT}:${PORT}"
       volumes:
-        - zoom-app-data:/home/node/app/public
-volumes:
-  zoom-app-data:
+        - ./:/home/node/app

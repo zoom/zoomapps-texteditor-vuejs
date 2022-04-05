@@ -8,8 +8,8 @@ COPY package*.json .env ./
 FROM base AS deps
 ARG NODE_ENV
 ENV NODE_ENV="${NODE_ENV}"
-RUN npm clean-install
+RUN npm ci --only=production
 
 FROM deps AS server
-COPY ./dist/ .
+COPY ./dist/* .
 CMD [ "npm", "start" ]

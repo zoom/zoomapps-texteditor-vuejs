@@ -7,10 +7,12 @@
     "app"
   ],
   "scripts": {
-    "prestart": "npm run build --workspaces",
-    "start": "docker compose up",
-    "build": "docker build --build-arg NODE_ENV=production -t zoom-app .",
-    "clean": "docker compose down -v --remove-orphans"
+    "start": "npm build -w app && npm run start-server",
+    "start-app": "npm run start -w app",
+    "start-server": "npm run start -w server",
+    "build": "npm run build -ws",
+    "clean": "npm run clean -w server",
+    "prepare": "npx husky install server/.husky"
   },
   "devDependencies": {
     "husky": "^7.0.4"

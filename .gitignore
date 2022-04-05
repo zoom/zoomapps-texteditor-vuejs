@@ -227,12 +227,9 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
-# yarn v2
-.yarn/cache
+# yarn berry
 .yarn/unplugged
 .yarn/build-state.yml
-.yarn/install-state.gz
-.pnp.*
 
 ### Go template
 # Binaries for programs and plugins
@@ -488,11 +485,6 @@ Generated\ Files/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
-
-# Build Results of an ATL Project
-[Dd]ebugPS/
-[Rr]eleasePS/
-dlldata.c
 
 # Benchmark Results
 BenchmarkDotNet.Artifacts/
