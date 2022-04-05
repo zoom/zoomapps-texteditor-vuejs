@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import MongoStore from 'connect-mongo';
 import debug from 'debug';
-import { appName } from '../config.js';
+import { appName } from './config.js';
 
 const dbg = debug(`${appName}:mongodb`);
 

@@ -1,9 +1,9 @@
 # https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
 FROM node:17-alpine AS base
 
-WORKDIR /home/node/server
+WORKDIR /home/node/app
 
-COPY package*.json ./
+COPY package*.json .env ./
 
 FROM base AS deps
 ARG NODE_ENV
@@ -11,6 +11,5 @@ ENV NODE_ENV="${NODE_ENV}"
 RUN npm clean-install
 
 FROM deps AS server
-COPY . .
-RUN ./gen-secrets.sh
+COPY ./dist/ .
 CMD [ "npm", "start" ]

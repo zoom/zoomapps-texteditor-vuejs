@@ -1,25 +1,20 @@
 {
   "name": "hello-zoom-apps",
-  "version": "0.0.0",
-  "type": "module",
-  "main": "dist/server",
-  "types": "dist/server",
-  "private": true,
+  "version": "0.1.0",
+  "description": "A Zoom App Template",
+  "workspaces": [
+    "server",
+    "app"
+  ],
   "scripts": {
-    "start": "docker compose up zoom-app",
-    "build": "npm run server",
-    "prepare": "npx husky install",
-    "clean": "docker compose down -v --remove-orphans --rmi local"
+    "prestart": "npm run build --workspaces",
+    "start": "docker compose up",
+    "build": "docker build --build-arg NODE_ENV=production -t zoom-app .",
+    "clean": "docker compose down -v --remove-orphans"
   },
   "devDependencies": {
-    "husky": "^7.0.4",
-    "lint-staged": "^12.3.4",
-    "prettier": "^2.5.1"
+    "husky": "^7.0.4"
   },
-  "lint-staged": {
-    "*.ts": [
-      "eslint --cache --fix",
-      "prettier --write"
-    ]
-  }
+  "private": true,
+  "license": "MIT"
 }

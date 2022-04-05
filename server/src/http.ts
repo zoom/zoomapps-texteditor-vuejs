@@ -1,6 +1,6 @@
 import http from 'http';
 import debug from 'debug';
-import { appName } from '../config.js';
+import { appName } from './config.js';
 import { Exception } from './models/exception.js';
 
 const dbg = debug(`${appName}:http`);
@@ -27,19 +27,19 @@ export async function start(app: Express.Application, port: number | string) {
         dbg(`Listening on ${bind}`);
     });
 
-    server.on('error', async (error: Exception) => {
-        if (error?.syscall !== 'listen') throw error;
+    server.on('error', (e: Exception) => {
+        if (e?.syscall !== 'listen') throw e;
 
         const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`;
 
         // handle specific listen errors with friendly messages
-        switch (error?.code) {
+        switch (e?.code) {
             case 'EACCES':
-                throw new Error(`${bind} requires elevated privileges`);
+                throw new Exception(`${bind} requires elevated privileges`);
             case 'EADDRINUSE':
-                throw new Error(`${bind} is already in use`);
+                throw new Exception(`${bind} is already in use`);
             default:
-                throw error;
+                throw e;
         }
     });
 

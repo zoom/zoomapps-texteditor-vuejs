@@ -1,7 +1,7 @@
 import axios, { Method } from 'axios';
 import { URL } from 'url';
 import createError from 'http-errors';
-import { zoomApp } from '../../config.js';
+import { zoomApp } from '../config.js';
 
 // Get Zoom API URL from Zoom Host value
 const host = new URL(zoomApp.host);

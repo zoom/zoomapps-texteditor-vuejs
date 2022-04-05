@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import encrypt from 'mongoose-encryption';
 import { authSchema } from './auth.js';
-import { encryptionKey, signingKey } from '../../config.js';
+import { encryptionKey, signingKey } from '../config.js';
 
 const { Schema } = mongoose;
 
