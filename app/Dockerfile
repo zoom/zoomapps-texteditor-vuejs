@@ -6,10 +6,8 @@ WORKDIR /home/node/app
 COPY package*.json ./
 
 FROM base AS deps
-ARG NODE_ENV
-ENV NODE_ENV="${NODE_ENV}"
-RUN npm install --only=production
+RUN npm install
 
-FROM deps AS server
-COPY . .
-CMD ["index.js"]
+FROM deps AS app
+COPY ./dist/* .
+CMD [ "npm", "start" ]

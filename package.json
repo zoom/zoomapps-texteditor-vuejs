@@ -1,5 +1,5 @@
 {
-  "name": "hello-zoom-apps",
+  "name": "hello-zoom",
   "version": "0.1.0",
   "description": "A Zoom App Template",
   "workspaces": [
@@ -7,12 +7,14 @@
     "app"
   ],
   "scripts": {
-    "start": "npm build -w app && npm run start-server",
-    "start-app": "npm run start -w app",
-    "start-server": "npm run start -w server",
+    "start": "npm run build -w app && npm run start -w server",
+    "predev": "npm run build -w server",
+    "dev": "docker compose --env-file=server/.env up",
+    "prebuild": "mkdir -p dist",
     "build": "npm run build -ws",
-    "clean": "npm run clean -w server",
-    "prepare": "npx husky install server/.husky"
+    "clean": "docker compose --env-file=server/.env down -v --remove-orphans --rmi local",
+    "prepare": "npx husky install server/.husky",
+    "postprepare": "cd server && ./gen-secrets.sh"
   },
   "devDependencies": {
     "husky": "^7.0.4"
