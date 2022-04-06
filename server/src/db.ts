@@ -7,7 +7,6 @@ const dbg = debug(`${appName}:mongodb`);
 
 /**
  * Connect to MongoDB
- * @param {string} uri - connection string
  */
 async function connect(uri: string) {
     if (!uri) throw new Error('mongodb connection string is invalid');
@@ -31,17 +30,15 @@ async function connect(uri: string) {
 
 /**
  * Disconnect from MongoDB
- * @return {Promise}
  */
-function disconnect() {
+function disconnect(): Promise<void> {
     return mongoose.disconnect();
 }
 
 /**
  * Create a store for use with express-session
- * @return {MongoStore}
  */
-function createStore() {
+function createStore(): MongoStore {
     if (mongoose.connection.readyState !== 1)
         throw new Error('cannot create store without a mongodb connection');
 

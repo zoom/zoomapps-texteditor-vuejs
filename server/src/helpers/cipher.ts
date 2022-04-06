@@ -100,4 +100,4 @@ export function getAppContext(header: string, secret = '') {
     return decrypt(cipherText, hash, iv, aad, tag);
 }
 
-export const contextHeader = 'x-zoom-server-context';
+export const contextHeader = 'x-zoom-app-context';

@@ -1,19 +1,19 @@
-import express, { NextFunction, Request, Response } from 'express';
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-
+import express from 'express';
+import axios from 'axios';
 import session from 'express-session';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-
-import db from './db.js';
 import debug from 'debug';
 import helmet from 'helmet';
 import logger from 'morgan';
 import { URL } from 'url';
 
-import { start } from './http.js';
-import { Exception } from './models/exception.js';
-import { ZoomContext } from './middleware/zoom-context.js';
+import db from './db.js';
+import { createHTTP } from './http.js';
+
+import zoomContext from './middleware/zoom-context.js';
+import errorHandler from './middleware/error-handler.js';
+import logAxios from './middleware/log-axios.js';
 
 import authRoutes from './routes/auth.js';
 
@@ -25,7 +25,6 @@ import {
     sessionSecret,
 } from './config.js';
 
-const isProd = process.env.NODE_ENV === 'production';
 const dirname = (path: string) => new URL(path, import.meta.url).pathname;
 const dbg = debug(`${appName}:app`);
 
@@ -34,54 +33,22 @@ await db.connect(mongoURL);
 
 /* App Config */
 const app = express();
+app.set('port', port);
+
+const redirectHost = new URL(redirectUri).host;
 
 const publicDir = dirname('public');
 const viewDir = dirname('views');
 
-// we use views to show server errors
+// we use server views to show server errors and prompt installs
 app.set('view engine', 'pug');
 app.set('views', viewDir);
 app.locals.basedir = publicDir;
 
-// CSP directives
-const redirectHost = new URL(redirectUri).host;
-
-// HTTP
-app.set('port', port);
-
-axios.interceptors.request.use((r: AxiosRequestConfig) => {
-    if (isProd) return;
-
-    const { method, url, baseURL } = r;
-
-    let msg = `${method?.toUpperCase()} `;
-
-    if (url && baseURL) msg += new URL(url, baseURL).href;
-
-    debug(`${appName}:axios`)(msg);
-
-    return r;
-});
-
-axios.interceptors.response.use((r: AxiosResponse) => {
-    if (isProd) return;
-
-    const {
-        status,
-        config: { method, url, baseURL },
-    } = r;
-
-    let msg = `${status.toString()} ${method?.toUpperCase()}`;
-
-    if (url) msg += new URL(url, baseURL).href;
-    else msg += baseURL;
-
-    debug(`${appName}:axios`)(msg);
-
-    return r;
-});
-
 /*  Middleware */
+axios.interceptors.request.use(logAxios.request);
+axios.interceptors.response.use(logAxios.response);
+
 const origins = ["'self'", "'unsafe-inline'", "'unsafe-eval'"];
 
 app.use(
@@ -114,7 +81,6 @@ app.use(compression());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(logger('dev', { stream: { write: (msg: string) => dbg(msg) } }));
-app.use(express.static(dirname('public')));
 
 app.use(
     session({
@@ -132,33 +98,32 @@ app.use(
     })
 );
 
-/* Routing */
+// set up our server routes
 app.use('/auth', authRoutes);
 
-app.use(ZoomContext);
+// Check each page for a Zoom Context Header
+app.use(/\/|\*.html/g, zoomContext());
 
-app.use((err: Exception, req: Request, res: Response, next: NextFunction) => {
-    const status = err.status || 500;
-    const title = `Error ${err.status}`;
+// handle server errors
+app.use(errorHandler());
 
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+// serve our vue app
+app.use(express.static(publicDir));
 
-    if (res.locals.error) dbg(`${title} %s`, err.stack);
-
-    // render the error page
-    res.status(status).render('error');
+// redirect 404s back to index.html
+app.get('*', (res, req) => {
+    req.redirect('/');
 });
 
-// redirect users to the home page if they get a 404 route
-app.get('*', (req, res) => res.redirect('/'));
+//
+const srvHttp = createHTTP(app);
 
-// start serving
-start(app, port).catch(async (e: Error) => {
-    console.error(e);
+try {
+    await srvHttp.listen(port);
+} catch (e: unknown) {
+    dbg(e);
     await db.disconnect();
     process.exit(1);
-});
+}
 
 export default app;

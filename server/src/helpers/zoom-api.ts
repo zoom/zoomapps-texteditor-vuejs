@@ -10,10 +10,10 @@ host.hostname = host.hostname.replace(/^/, 'api.');
 const baseURL = host.href;
 
 /**
- * Generic function for getting access or refresh tokens
- * @param {string} [id] - Username for Basic Auth
- * @param {string} [secret] - Password for Basic Auth
- * @param {URLSearchParams} params - Request parameters (form-urlencoded)
+ * Generic function for retrieving access or refresh tokens
+ * @param params - Request parameters (form-urlencoded)
+ * @param [id=''] - Username for Basic Auth
+ * @param [secret=''] - Password for Basic Auth
  */
 function tokenRequest(params: URLSearchParams, id?: string, secret?: string) {
     const username = id || zoomApp.clientId;
@@ -35,10 +35,7 @@ function tokenRequest(params: URLSearchParams, id?: string, secret?: string) {
 }
 
 /**
- * @param {Method} method - Request method
- * @param {string | URL} endpoint - Zoom API Endpoint
- * @param {string} token - Access Token
- * @param {object} [data=null] - Request data
+ * Generic function to make a request to the Zoom API
  */
 function apiRequest(
     method: Method,
@@ -59,8 +56,7 @@ function apiRequest(
 
 /**
  * Get the authorization header for the Zoom API
- * @param {String} token - Access Token
- * @return {String} Zoom API Authorization header
+ * @param token - Access Token
  */
 export function getAuthHeader(token: string) {
     return `Bearer ${token}`;
@@ -76,8 +72,7 @@ export function getInstallURL() {
 
 /**
  * Obtains an OAuth access token from Zoom
- * @param {string} code - Authorization code from user authorization
- * @return {Promise}  Promise resolving to the access token object
+ * @param code - Authorization code from user authorization
  */
 export async function getToken(code: string) {
     if (!code)
@@ -93,8 +88,7 @@ export async function getToken(code: string) {
 
 /**
  * Obtain a new Access Token from a Zoom Refresh Token
- * @param {string} token - Refresh token to use
- * @return {Promise<void>}
+ * @param token - Refresh token to use
  */
 export async function refreshToken(token: string) {
     if (!token) throw createError(500, 'refresh token must be a valid string');
@@ -119,7 +113,6 @@ export function getZoomUser(uid: string, token: string) {
 /**
  * Return the DeepLink for opening Zoom
  * @param {string} token - Zoom App Access Token
- * @return {Promise}
  */
 export function getDeeplink(token: string) {
     return apiRequest('POST', '/zoomapp/deeplink', token, {

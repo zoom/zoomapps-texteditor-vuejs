@@ -1,13 +1,16 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { query } from 'express-validator';
+import debug from 'debug';
 
+import { Exception } from '../models/exception.js';
 import { handleError, sanitize } from '../helpers/routing.js';
 import { getDeeplink, getToken, getZoomUser } from '../helpers/zoom-api.js';
 
 import Auth from '../models/auth.js';
 import User from '../models/user.js';
-import { Exception } from '../models/exception.js';
-import debug from 'debug';
+
+import { appName } from '../config.js';
+const dbg = debug(`${appName}:auth`);
 
 const router = express.Router();
 
@@ -19,7 +22,7 @@ const stateMax = 1024;
 const validateQuery = [
     query('code')
         .isString()
-        .withMessage('code must be a string')
+        .withMessage('code must be a valid string')
         .isLength({ min: codeMin, max: codeMax })
         .withMessage(`code must be > ${codeMin} and < ${codeMax} chars`)
         .escape(),
@@ -38,12 +41,16 @@ const validateQuery = [
  */
 const authHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        debug('hello-zoom:auth')('inauth');
-
         // sanitize code and state query parameters
         await sanitize(req);
 
-        debug('hello-zoom:auth')('inauth');
+        const code = req.query.code;
+
+        // we have to check the type for TS so let's add an error too
+        if (typeof code !== 'string') {
+            const e = new Exception('invalid code parameter received', 400);
+            return next(handleError(e));
+        }
 
         // get Access Token from Zoom
         const {
@@ -51,7 +58,7 @@ const authHandler = async (req: Request, res: Response, next: NextFunction) => {
             expires_in,
             access_token: accessToken,
             refresh_token: refreshToken,
-        } = await getToken(req.query.code as string);
+        } = await getToken(code);
 
         // create a new Auth object for this user
         const auth = await Auth.create({
@@ -73,8 +80,8 @@ const authHandler = async (req: Request, res: Response, next: NextFunction) => {
         // redirect the user to the Zoom Client
         res.redirect(deeplink);
     } catch (e: unknown) {
-        if (!(e instanceof Exception)) return console.error(e);
-        next(handleError(e));
+        if (!(e instanceof Exception)) return dbg(e);
+        return next(handleError(e));
     }
 };
 
