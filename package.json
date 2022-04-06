@@ -7,17 +7,20 @@
     "app"
   ],
   "scripts": {
-    "start": "npm run build -w app && npm run start -w server",
-    "predev": "npm run build -w server",
-    "dev": "docker compose --env-file=server/.env up",
-    "prebuild": "mkdir -p dist",
-    "build": "npm run build -ws",
-    "clean": "docker compose --env-file=server/.env down -v --remove-orphans --rmi local",
-    "prepare": "npx husky install server/.husky",
-    "postprepare": "cd server && ./gen-secrets.sh"
+    "start": "node dist/index.js",
+    "build": "./build.sh",
+    "prestart": "npm run build",
+    "dev": "concurrently -k  -n 'dev-' -c 'inverse.yellow,inverse.cyan'  'npm:dev-*'",
+    "dev-server": "npm run dev -w server",
+    "dev-app": "wait-on tcp:3000 && npm run dev -w app",
+    "preprepare": "husky install server/.husky",
+    "prepare": "chmod +x {gen-secrets,build}.sh",
+    "postprepare": "./gen-secrets.sh"
   },
   "devDependencies": {
-    "husky": "^7.0.4"
+    "husky": "^7.0.4",
+    "wait-on": "^6.0.1",
+    "concurrently": "^7.1.0"
   },
   "private": true,
   "license": "MIT"

@@ -6,7 +6,7 @@
 
 set -eu
 
-file='.env'
+file='server/.env'
 
 # generate a key 32 bits in length
 dword() {

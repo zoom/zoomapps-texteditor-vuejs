@@ -1,9 +1,10 @@
 {
-  "name": "app",
+  "name": "zoom-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "vue-cli-service serve",
+    "serve": "vue-cli-service serve",
+    "dev": "vue-cli-service build --watch --mode dev --dest ../dist/public",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
@@ -39,8 +40,8 @@
     ]
   },
   "browserslist": [
-    "> 0.5%",
-    "last 2 versions",
+    "> 0.3%",
+    "last 3 versions",
     "not dead",
     "not ie 11"
   ],

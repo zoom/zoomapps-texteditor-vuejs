@@ -6,48 +6,26 @@ import db from './db.js';
 import debug from 'debug';
 import helmet, { HelmetOptions } from 'helmet';
 import logger from 'morgan';
-import session from 'express-session';
 import { URL } from 'url';
 
 import { start } from './http.js';
 import { Exception } from './models/exception.js';
-import homeRoutes from './routes/home.js';
+import indexRoutes from './routes/index.js';
 import authRoutes from './routes/auth.js';
 
-import {
-    appName,
-    mongoURL,
-    port,
-    redirectUri,
-    sessionSecret,
-} from './config.js';
-
-declare module 'express-session' {
-    interface Session {
-        userId: string;
-        meetingUUID: string;
-    }
-}
+import { appName, mongoURL, port, redirectUri } from './config.js';
 
 const dirname = (path: string) => new URL(path, import.meta.url).pathname;
+const dbg = debug(`${appName}:app`);
 
 // connect to MongoDB
 await db.connect(mongoURL);
 
 /* App Config */
 const app = express();
-const dbg = debug(`${appName}:app`);
 
 // CSP directives
 const redirectHost = new URL(redirectUri).host;
-
-// views and assets
-const appDir = dirname('app');
-const viewDir = dirname('server/views');
-
-app.set('view engine', 'pug');
-app.set('views', viewDir);
-app.locals.basedir = appDir;
 
 // HTTP
 app.set('port', port);
@@ -57,7 +35,7 @@ axios.interceptors.request.use((r: AxiosRequestConfig) => {
 
     const { method, url, baseURL } = r;
 
-    let msg = method;
+    let msg = `${method?.toUpperCase()} `;
 
     if (url && baseURL) msg += new URL(url, baseURL).href;
 
@@ -71,10 +49,10 @@ axios.interceptors.response.use((r: AxiosResponse) => {
 
     const {
         status,
-        config: { url, baseURL },
+        config: { method, url, baseURL },
     } = r;
 
-    let msg = status.toString();
+    let msg = `${status.toString()} ${method?.toUpperCase()}`;
 
     if (url) msg += new URL(url, baseURL).href;
     else msg += baseURL;
@@ -85,7 +63,6 @@ axios.interceptors.response.use((r: AxiosResponse) => {
 });
 
 /*  Middleware */
-
 const headers: Readonly<HelmetOptions> = {
     frameguard: {
         action: 'sameorigin',
@@ -94,7 +71,7 @@ const headers: Readonly<HelmetOptions> = {
         maxAge: 31536000,
     },
     referrerPolicy: {
-        policy: 'sameorigin',
+        policy: 'same-origin',
     },
     contentSecurityPolicy: {
         directives: {
@@ -114,30 +91,14 @@ app.use(express.json());
 app.use(compression());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
-app.use(logger('dev', { stream: { write: (msg) => dbg(msg) } }));
+app.use(logger('dev', { stream: { write: (msg: string) => dbg(msg) } }));
 
-// serve our app folder
-app.use(express.static(appDir));
-
-app.use(
-    session({
-        secret: sessionSecret,
-        resave: false,
-        saveUninitialized: true,
-        cookie: {
-            path: '/',
-            httpOnly: true,
-            secure: true,
-            sameSite: true,
-            maxAge: 365 * 24 * 60 * 60 * 1000,
-        },
-        store: db.createStore(),
-    })
-);
+if (process.env.NODE_ENV === 'production')
+    app.use(express.static(dirname('public')));
 
 /* Routing */
-app.use('/', homeRoutes);
-app.use('/auth', authRoutes);
+app.use('/api', indexRoutes);
+app.use('/api/auth', authRoutes);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: Exception, req: Request, res: Response, next: NextFunction) => {
@@ -152,7 +113,7 @@ app.use((err: Exception, req: Request, res: Response, next: NextFunction) => {
 
     // render the error page
     res.status(status);
-    res.render('error');
+    res.send(err);
 });
 
 // redirect users to the home page if they get a 404 route

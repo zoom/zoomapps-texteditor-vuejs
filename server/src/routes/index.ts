@@ -23,28 +23,23 @@ const validateHeader = header(contextHeader)
  * this route is used when a user navigates to the deep link
  */
 
-const homeHandler = async (req: Request, res: Response, next: NextFunction) => {
+const indexHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     try {
         await sanitize(req);
 
         const header = req.header(contextHeader);
 
-        let name = 'Browser';
-        let isZoom = false;
+        if (!header) return res.status(400).send('app context is blank');
 
-        if (header) {
-            const ctx = getAppContext(header);
+        const { uid, mid } = getAppContext(header);
 
-            req.session.userId = ctx.uid;
-            req.session.meetingUUID = ctx.mid;
-
-            isZoom = true;
-            name = 'Zoom';
-        }
-
-        return res.render('index', {
-            isZoom,
-            title: `Hello ${name}`,
+        return res.send({
+            uid,
+            mid,
             installURL: getInstallURL(),
         });
     } catch (e: unknown) {
@@ -60,7 +55,7 @@ const homeHandler = async (req: Request, res: Response, next: NextFunction) => {
 const installHandler = async (req: Request, res: Response) =>
     res.redirect(getInstallURL());
 
-router.get('/', validateHeader, homeHandler);
+router.get('/', validateHeader, indexHandler);
 router.get('/install', validateHeader, installHandler);
 
 export default router;
