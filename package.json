@@ -12,16 +12,14 @@
     "prestart": "npm run build",
     "dev": "concurrently -kn dev- -c inverse.yellow,inverse.cyan npm:dev-*",
     "dev-server": "npm run dev -w server",
-    "dev-app": "wait-on tcp:$(dotenv -e server/.env -p PORT) && npm run dev -w app",
+    "dev-app": "npm run dev -w app",
     "preprepare": "husky install server/.husky",
     "prepare": "chmod +x {gen-secrets,build}.sh",
     "postprepare": "./gen-secrets.sh"
   },
   "devDependencies": {
     "concurrently": "^7.1.0",
-    "dotenv-cli": "^5.1.0",
-    "husky": "^7.0.4",
-    "wait-on": "^6.0.1"
+    "husky": "^7.0.4"
   },
   "private": true,
   "license": "MIT"
