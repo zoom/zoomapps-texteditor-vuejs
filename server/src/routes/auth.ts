@@ -7,6 +7,7 @@ import { getDeeplink, getToken, getZoomUser } from '../helpers/zoom-api.js';
 import Auth from '../models/auth.js';
 import User from '../models/user.js';
 import { Exception } from '../models/exception.js';
+import debug from 'debug';
 
 const router = express.Router();
 
@@ -37,8 +38,12 @@ const validateQuery = [
  */
 const authHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        debug('hello-zoom:auth')('inauth');
+
         // sanitize code and state query parameters
         await sanitize(req);
+
+        debug('hello-zoom:auth')('inauth');
 
         // get Access Token from Zoom
         const {

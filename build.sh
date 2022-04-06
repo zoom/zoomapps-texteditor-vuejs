@@ -7,17 +7,20 @@
 set -eu
 
 export NODE_ENV=production
-outputDir='dist'
+outDir='dist'
+
+[ -d "$outDir" ] && rm -r "$outDir"
+mkdir -p "$outDir"
 
 npm run build -ws
 
-cp -r server/dist "$outputDir"
-cp -r app/dist "$outputDir/pubic"
+cp -r server/dist "$outDir"
+cp -r app/dist "$outDir/pubic"
 
-cd "$outputDir"
+cd "$outDir"
 npm install --only=production
 cd - > /dev/null
 
-echo "$(basename "$0") - built to $PWD/$outputDir folder"
+echo "$(basename "$0") - built to $PWD/$outDir folder"
 
 exit

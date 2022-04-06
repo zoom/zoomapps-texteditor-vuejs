@@ -10,17 +10,18 @@
     "start": "node dist/index.js",
     "build": "./build.sh",
     "prestart": "npm run build",
-    "dev": "concurrently -k  -n 'dev-' -c 'inverse.yellow,inverse.cyan'  'npm:dev-*'",
+    "dev": "concurrently -kn dev- -c inverse.yellow,inverse.cyan npm:dev-*",
     "dev-server": "npm run dev -w server",
-    "dev-app": "wait-on tcp:3000 && npm run dev -w app",
+    "dev-app": "wait-on tcp:$(dotenv -e server/.env -p PORT) && npm run dev -w app",
     "preprepare": "husky install server/.husky",
     "prepare": "chmod +x {gen-secrets,build}.sh",
     "postprepare": "./gen-secrets.sh"
   },
   "devDependencies": {
+    "concurrently": "^7.1.0",
+    "dotenv-cli": "^5.1.0",
     "husky": "^7.0.4",
-    "wait-on": "^6.0.1",
-    "concurrently": "^7.1.0"
+    "wait-on": "^6.0.1"
   },
   "private": true,
   "license": "MIT"

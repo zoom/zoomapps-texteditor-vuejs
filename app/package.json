@@ -41,7 +41,7 @@
   },
   "browserslist": [
     "> 0.3%",
-    "last 3 versions",
+    "last 4 versions",
     "not dead",
     "not ie 11"
   ],
