@@ -12,7 +12,7 @@ set -eu
 serve() {
   npx concurrently \
   -kn 'dev-app,dev-server,' \
-  -c 'inverse.yellow,inverse.blue' \
+  -c 'inverse.blue,inverse.yellow,' \
   'npm:dev -w app' \
   'npm:dev -w server'
 }
