@@ -11,7 +11,7 @@
     "predev": "docker compose up -d mongodb",
     "dev": "DEBUG=\"$(dotenv -p APP_NAME)*\" tsc-watch --noClear --onSuccess 'npm run serve'",
     "clean": "docker compose down",
-    "copy": "mkdir -p ../dist && cp -r src/views package.json .env $_"
+    "copy": "cp -r src/views package.json .env ../dist"
   },
   "dependencies": {
     "axios": "^0.26.0",

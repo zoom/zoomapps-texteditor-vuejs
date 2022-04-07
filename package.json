@@ -10,7 +10,7 @@
     "start": "node dist/index.js",
     "build": "./build.sh",
     "prestart": "npm run build",
-    "dev": "concurrently -kn dev- -c inverse.yellow,inverse.cyan npm:dev-*",
+    "dev": "concurrently -kn dev- -c inverse.yellow,inverse.blue npm:dev-*",
     "dev-server": "npm run dev -w server",
     "dev-app": "npm run dev -w app",
     "preprepare": "husky install server/.husky",

@@ -6,7 +6,13 @@
 
 set -eu
 
-file='server/.env'
+file="server/.env"
+sample="$file.sample"
+
+# copy the sample to .env if it doesn't exist
+if [ ! -f "$file" ] && [ -f "$sample" ]; then
+  cp "$sample" "$file"
+fi
 
 # generate a key 32 bits in length
 dword() {
@@ -51,10 +57,7 @@ allow_list=$(echo "${allow_list}" | cut -c 2-)
 # shellcheck disable=SC2086
 new_env=$(env $env_vars envsubst "${allow_list}" <$file)
 
-# prevent .env changes from being tracked by git
-git update-index --assume-unchanged $file
-
-# send replaced env vars to the $file file
+# send replaced env vars to the .env file
 echo "${new_env}" >$file
 echo "$(basename "$0") - Generated secrets for $file"
 

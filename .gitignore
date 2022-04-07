@@ -1,5 +1,7 @@
-# We ignore the .env file through git
-# https://stackoverflow.com/questions/17195861/undo-git-update-index-assume-unchanged-file
+# dotenv environment variables file
+.env
+.env.*
+!.env.sample
 
 
 ### JetBrains template
@@ -7,19 +9,6 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 .idea
-
-# Gradle and Maven with auto-import
-# When using Gradle or Maven with auto-import, you should exclude module files,
-# since they will be recreated, and may cause churn.  Uncomment if using
-# auto-import.
-# .idea/artifacts
-# .idea/compiler.xml
-# .idea/jarRepositories.xml
-# .idea/modules.xml
-# .idea/*.iml
-# .idea/modules
-# *.iml
-# *.ipr
 
 ### NotepadPP template
 # Notepad++ backups #
@@ -44,20 +33,13 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
-
 # Compiled Static libraries
 *.lai
 *.la
 *.a
 *.lib
 
-# Executables
-*.exe
-*.out
-*.server
+
 
 ### VisualStudioCode template
 .vscode/*
@@ -182,15 +164,6 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
-
-# We ignore the .env file through git
-# https://stackoverflow.com/questions/17195861/undo-git-update-index-assume-unchanged-file
-#.env
-
-
-.env.*
-
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
@@ -227,9 +200,12 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
-# yarn berry
+# yarn v2
+.yarn/cache
 .yarn/unplugged
 .yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
 
 ### Go template
 # Binaries for programs and plugins
@@ -486,6 +462,11 @@ Generated\ Files/
 TestResult.xml
 nunit-*.xml
 
+# Build Results of an ATL Project
+[Dd]ebugPS/
+[Rr]eleasePS/
+dlldata.c
+
 # Benchmark Results
 BenchmarkDotNet.Artifacts/
 
@@ -622,6 +603,10 @@ PublishScripts/
 *.nupkg
 # NuGet Symbol Packages
 *.snupkg
+# The packages folder can be ignored because of Package Restore
+**/[Pp]ackages/*
+# except build/, which is used as an MSBuild target.
+!**/[Pp]ackages/build/
 # Uncomment if necessary however generally it will be regenerated when needed
 #!**/[Pp]ackages/repositories.config
 # NuGet v3's project.json files produces more ignorable files
@@ -636,7 +621,7 @@ csx/
 ecf/
 rcf/
 
-# Windows Store server package directories and files
+# Windows Store app package directories and files
 AppPackages/
 BundleArtifacts/
 Package.StoreAssociation.xml
@@ -790,6 +775,9 @@ FodyWeavers.xsd
 *.log.*
 *.sig
 
+pkg/
+src/
+
 ### AppEngine template
 # Google App Engine generated folder
 appengine-generated/
@@ -841,4 +829,3 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
-
