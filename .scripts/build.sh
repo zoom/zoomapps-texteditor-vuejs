@@ -6,7 +6,7 @@
 
 set -eu
 
-export NODE_ENV=production
+export NODE_ENV='production'
 outDir='dist'
 
 [ -d "$outDir" ] && rm -r "$outDir"
