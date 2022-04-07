@@ -20,12 +20,6 @@ async function connect(uri: string) {
     await mongoose.connect(uri);
 
     mongoose.Promise = global.Promise;
-
-    process.on('SIGINT', () => {
-        dbg('SIGINT caught => closing connection');
-
-        mongoose.connection.close(() => dbg('connection closed'));
-    });
 }
 
 /**

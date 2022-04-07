@@ -31,6 +31,11 @@ const dbg = debug(`${appName}:app`);
 // connect to MongoDB
 await db.connect(mongoURL);
 
+process.on('SIGINT', async () => {
+    await db.disconnect();
+    process.exit(1);
+});
+
 /* App Config */
 const app = express();
 app.set('port', port);
