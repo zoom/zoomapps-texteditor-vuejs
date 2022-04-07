@@ -2,25 +2,29 @@
   "name": "hello-zoom",
   "version": "0.1.0",
   "description": "A Zoom App Template",
+  "private": true,
+  "license": "MIT",
   "workspaces": [
     "server",
     "app"
   ],
   "scripts": {
     "start": "node dist/index.js",
-    "build": "./build.sh",
+    "build": ".scripts/build.sh",
+    "dev": ".scripts/dev.sh",
+    "prepare": "husky install",
     "prestart": "npm run build",
-    "dev": "concurrently -kn dev- -c inverse.yellow,inverse.blue npm:dev-*",
-    "dev-server": "npm run dev -w server",
-    "dev-app": "npm run dev -w app",
-    "preprepare": "husky install server/.husky",
-    "prepare": "chmod +x {gen-secrets,build}.sh",
-    "postprepare": "./gen-secrets.sh"
+    "postinstall": "chmod -R +x .scripts && $_/gen-secrets.sh"
   },
   "devDependencies": {
     "concurrently": "^7.1.0",
+    "dotenv-cli": "^5.1.0",
     "husky": "^7.0.4"
   },
-  "private": true,
-  "license": "MIT"
+  "lint-staged": {
+    "*.ts": [
+      "eslint --cache --fix",
+      "prettier --write"
+    ]
+  }
 }

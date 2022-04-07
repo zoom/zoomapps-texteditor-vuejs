@@ -1,8 +1,7 @@
 <template>
     <div class="home">
-        <img alt="Vue logo" width="512" src="../assets/logo.png" />
-        <HelloZoom msg="Welcome to Your Vue.js + TypeScript App" />
-        test
+        <img id="logo" alt="Vue logo" src="../assets/logo.png" />
+        <HelloZoom msg="Welcome to Your Zoom App" />
     </div>
 </template>
 
@@ -17,3 +16,11 @@ export default defineComponent({
     },
 });
 </script>
+
+<style scoped lang="scss">
+#logo {
+    width: 100%;
+    height: auto;
+    max-width: 20vw;
+}
+</style>

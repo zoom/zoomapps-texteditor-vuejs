@@ -6,7 +6,7 @@
 
 set -eu
 
-file="server/.env"
+file=".env"
 sample="$file.sample"
 
 # copy the sample to .env if it doesn't exist
