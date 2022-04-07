@@ -1,14 +1,11 @@
 #!/usr/bin/env sh
 
-##
-# Prepare the development servers for backend and frontend
-##
+#
+# Start the development servers
+#
 
 set -eu
 
-##
-# Start server and app development servers
-##
 serve() {
   npx concurrently \
   -kn 'dev-app,dev-server,' \
@@ -16,6 +13,7 @@ serve() {
   'npm:dev -w app' \
   'npm:dev -w server'
 }
+export NODE_ENV='development'
 
 # narrow the debug logs to our app - fallback to a wildcard
 DEBUG="$(npx dotenv -p APP_NAME)*"

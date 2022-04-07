@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 
-##
+#
 # Build the Zoom App for production
-##
+#
 
 set -eu
 
