@@ -10,7 +10,11 @@ set -eu
 # Start server and app development servers
 ##
 serve() {
-  npx concurrently -kn 'dev-server,dev-app' -c 'inverse.yellow,inverse.blue' 'npm:dev -w server' 'npm:dev -w app'
+  npx concurrently \
+  -kn 'dev-app,dev-server,' \
+  -c 'inverse.yellow,inverse.blue' \
+  'npm:dev -w server' \
+  'npm:dev -w app'
 }
 
 # narrow the debug logs to our app - fallback to a wildcard
@@ -28,7 +32,7 @@ cp -r .env package-lock.json server/src/views server/package.json dist/
 serve
 
 # stop mongodb up when we're done
-docker compose down -v -v --remove-orphans
+docker compose down -v --remove-orphans
 
 exit
 
