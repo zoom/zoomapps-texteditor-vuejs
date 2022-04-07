@@ -13,8 +13,8 @@ serve() {
   npx concurrently \
   -kn 'dev-app,dev-server,' \
   -c 'inverse.yellow,inverse.blue' \
-  'npm:dev -w server' \
-  'npm:dev -w app'
+  'npm:dev -w app' \
+  'npm:dev -w server'
 }
 
 # narrow the debug logs to our app - fallback to a wildcard
