@@ -10,7 +10,7 @@ set -eu
 # Start server and app development servers
 ##
 serve() {
-  npx concurrently -kn 'server,app' -c 'inverse.yellow,inverse.blue' 'npm:dev -w server' 'npm:dev -w app'
+  npx concurrently -kn 'dev-server,dev-app' -c 'inverse.yellow,inverse.blue' 'npm:dev -w server' 'npm:dev -w app'
 }
 
 # narrow the debug logs to our app - fallback to a wildcard
@@ -18,7 +18,7 @@ DEBUG="$(npx dotenv -p APP_NAME)*"
 export DEBUG;
 
 # start mongoDB in a container
-docker compose up -d mongodb
+docker compose up -d
 
 # copy non-code files to the dist folder
 mkdir -p dist
