@@ -1,5 +1,9 @@
 <template>
-    <router-view />
+    <div class="grid">
+        <div class="col">
+            <router-view />
+        </div>
+    </div>
 </template>
 <style lang="scss">
 #app {
