@@ -10,16 +10,12 @@ export NODE_ENV='production'
 outDir='dist'
 
 [ -d "$outDir" ] && rm -r "$outDir"
-mkdir -p "$outDir"
+mkdir "$outDir"
 
 npm run build -ws
 
-cp -r server/dist "$outDir"
-cp -r app/dist "$outDir/pubic"
-
-cd "$outDir"
-npm install --only=production
-cd - > /dev/null
+cp -r .env package-lock.json server/src/views server/package.json "$outDir"
+cp -r app/dist "$outDir/public"
 
 echo "$(basename "$0") - built to $PWD/$outDir folder"
 

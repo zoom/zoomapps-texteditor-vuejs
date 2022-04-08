@@ -10,24 +10,28 @@ serve() {
   npx concurrently \
   -kn 'dev-app,dev-server,' \
   -c 'inverse.cyan,inverse.yellow,' \
-  'npm:dev -w app' \
+  "wait-on tcp:$1 && npm run dev -w app" \
   'npm:dev -w server'
 }
-export NODE_ENV='development'
 
-# narrow the debug logs to our app - fallback to a wildcard
-DEBUG="$(npx dotenv -p APP_NAME)*"
+getConfig() {
+  npx dotenv -p "$1"
+}
+
+PORT="$(getConfig 'PORT')"
+DEBUG="$(getConfig 'APP_NAME')*"
+
+export NODE_ENV='development'
 export DEBUG;
 
 # start mongoDB in a container
 docker compose up -d
 
 # copy non-code files to the dist folder
-mkdir -p dist
 cp -r .env package-lock.json server/src/views server/package.json dist/
 
 # start dev servers
-serve
+serve "$PORT"
 
 # stop mongodb up when we're done
 docker compose down -v --remove-orphans
