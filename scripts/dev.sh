@@ -24,11 +24,14 @@ DEBUG="$(getConfig 'APP_NAME')*"
 export NODE_ENV='development'
 export DEBUG;
 
+outDir='dist/'
+
 # start mongoDB in a container
 docker compose up -d
 
 # copy non-code files to the dist folder
-cp -r .env package-lock.json server/src/views server/package.json dist/
+mkdir -p "$outDir"
+cp -r .env package-lock.json server/src/views server/package.json "$outDir"
 
 # start dev servers
 serve "$PORT"
