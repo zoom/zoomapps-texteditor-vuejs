@@ -1,10 +1,11 @@
 <template>
-    <div class="grid">
-        <div class="col">
+    <section class="section">
+        <div class="container">
             <router-view />
         </div>
-    </div>
+    </section>
 </template>
+
 <style lang="scss">
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;

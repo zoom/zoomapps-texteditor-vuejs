@@ -13,10 +13,10 @@ const maxLen = 512;
 export default () => (req: Request, res: Response, next: NextFunction) => {
     const header = req.header(contextHeader);
 
-    if (!header)
-        return res.render('install', {
+    if (!header) return next();
+    /*        return res.render('install', {
             installURL: getInstallURL(),
-        });
+        });*/
 
     if (header.length > maxLen) {
         const e = new Exception(

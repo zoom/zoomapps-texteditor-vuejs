@@ -1,21 +1,14 @@
+<script setup lang="ts">
+import HelloZoom from '@/components/HelloZoom.vue';
+</script>
+
 <template>
     <div class="home">
-        <img id="logo" alt="Vue logo" src="../assets/logo.png" />
+        <img id="logo" alt="Vue logo" src="@/assets/img/logo.png" />
         <HelloZoom msg="Welcome to Your Zoom App" />
+        <textarea id="text" />
     </div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from 'vue';
-import HelloZoom from '@/components/HelloZoom.vue'; // @ is an alias to /src
-
-export default defineComponent({
-    name: 'HomeView',
-    components: {
-        HelloZoom,
-    },
-});
-</script>
 
 <style scoped lang="scss">
 #logo {

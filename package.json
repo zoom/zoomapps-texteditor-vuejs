@@ -4,6 +4,7 @@
   "description": "A Zoom App Template",
   "private": true,
   "license": "MIT",
+  "main": "dist/index.js",
   "workspaces": [
     "server",
     "app"

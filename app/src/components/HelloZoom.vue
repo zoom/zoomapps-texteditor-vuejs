@@ -1,18 +1,13 @@
 <template>
     <div class="hello">
-        <h1>{{ msg }}</h1>
+        <h1 class="title">{{ msg }}</h1>
         <p>Start a meeting and open this app to use it</p>
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-    name: 'HelloZoom',
-    props: {
-        msg: String,
-    },
+<script setup lang="ts">
+defineProps({
+    msg: { type: String, required: true },
 });
 </script>
 
