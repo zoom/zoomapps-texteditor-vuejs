@@ -12,8 +12,8 @@
 <script setup lang="ts">
 import * as Y from 'yjs';
 import { WebrtcProvider } from 'y-webrtc';
-import { onBeforeUnmount, watch } from 'vue';
 
+import { onBeforeUnmount, watch } from 'vue';
 import { EditorContent, useEditor } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import Collaboration from '@tiptap/extension-collaboration';
@@ -25,12 +25,9 @@ import TextAlign from '@tiptap/extension-text-align';
 
 import MenuBar from './MenuBar';
 
-const ydoc = new Y.Doc();
-
-const provider = new WebrtcProvider('example-document', ydoc);
-
 interface Props {
     content: string;
+    meeting: string;
 }
 
 const props = defineProps<Props>();
@@ -47,6 +44,14 @@ const colors = [
     '#F788B0',
 ];
 
+// A new Y document
+const ydoc = new Y.Doc();
+
+// Registered with a WebRTC provider
+const provider = new WebrtcProvider('example-document', ydoc, {
+    signaling: [`wss://${window.location.host}`],
+});
+
 const editor = useEditor({
     content: props.content,
     extensions: [
@@ -57,7 +62,7 @@ const editor = useEditor({
         TaskList,
         TaskItem,
         Collaboration.configure({
-            document: provider.doc,
+            document: ydoc,
         }),
         CollaborationCursor.configure({
             provider,
@@ -68,11 +73,12 @@ const editor = useEditor({
         }),
         TextAlign.configure({
             types: ['heading', 'paragraph'],
-            defaultAlignment: 'left',
         }),
     ],
     onUpdate: () => emit('updated', editor.value?.getHTML()),
 });
+
+editor.value?.chain().focus().setTextAlign('left').run();
 
 onBeforeUnmount(() => {
     editor.value?.destroy();
@@ -101,9 +107,8 @@ $max-height: 85vh;
     flex-direction: column;
     min-height: $min-height;
     max-height: $max-height;
-    color: #0d0d0d;
     background-color: #fff;
-    border: 3px solid #0d0d0d;
+    border: 2px solid #b5b5b5;
     border-radius: 0.75rem;
 
     &__header {
@@ -112,7 +117,7 @@ $max-height: 85vh;
         flex: 0 0 auto;
         flex-wrap: wrap;
         padding: 0.25rem;
-        border-bottom: 3px solid #0d0d0d;
+        border-bottom: 2px solid #b5b5b5;
     }
 
     &__content {
@@ -145,7 +150,7 @@ $max-height: 85vh;
     font-weight: 600;
     line-height: normal;
     user-select: none;
-    color: #0d0d0d;
+    color: black;
     padding: 0.1rem 0.3rem;
     border-radius: 3px 3px 3px 0;
     white-space: nowrap;
@@ -157,6 +162,10 @@ $max-height: 85vh;
     max-height: $max-height;
     text-align: left;
 
+    &-focused {
+        outline: none;
+    }
+
     > * + * {
         margin-top: 0.75em;
     }
@@ -164,9 +173,6 @@ $max-height: 85vh;
     ul,
     ol {
         padding: 0 1rem;
-        > li {
-            color: red;
-        }
     }
 
     h1,

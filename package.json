@@ -28,5 +28,8 @@
       "eslint --cache --fix",
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "@types/websocket": "^1.0.5"
   }
 }

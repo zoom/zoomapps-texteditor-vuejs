@@ -10,6 +10,7 @@ import { URL } from 'url';
 
 import db from './db.js';
 import { createHTTP } from './http.js';
+import signal from './signal.js';
 
 import zoomContext from './middleware/zoom-context.js';
 import errorHandler from './middleware/error-handler.js';
@@ -116,12 +117,15 @@ app.use(errorHandler());
 app.use(express.static(publicDir));
 
 // redirect 404s back to index.html
-app.get('*', (res, req) => {
-    req.redirect('/');
+app.get('*', (req, res) => {
+    res.sendFile('index.html', { root: publicDir });
 });
 
-//
+//start http server
 const srvHttp = createHTTP(app);
+
+// start signaling websocket server for webrtc
+signal.config(srvHttp);
 
 try {
     await srvHttp.listen(port);
