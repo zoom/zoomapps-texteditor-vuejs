@@ -1,9 +1,9 @@
 <template>
     <div class="editor" v-if="editor">
-        <div class="editor__header">
+        <div class="editor__header pb-4 pt-0">
             <menu-bar :editor="editor" />
         </div>
-        <div class="editor__content">
+        <div class="editor__content content pb-2 pt-4">
             <editor-content :editor="editor" />
         </div>
     </div>
@@ -22,12 +22,14 @@ import TaskList from '@tiptap/extension-task-list';
 import TaskItem from '@tiptap/extension-task-item';
 import Highlight from '@tiptap/extension-highlight';
 import TextAlign from '@tiptap/extension-text-align';
+import Underline from '@tiptap/extension-underline';
 
 import MenuBar from './MenuBar';
 
 interface Props {
     content: string;
     meeting: string;
+    screenName: string;
 }
 
 const props = defineProps<Props>();
@@ -48,7 +50,7 @@ const colors = [
 const ydoc = new Y.Doc();
 
 // Registered with a WebRTC provider
-const provider = new WebrtcProvider('example-document', ydoc, {
+const provider = new WebrtcProvider(props.meeting, ydoc, {
     signaling: [`wss://${window.location.host}`],
 });
 
@@ -61,13 +63,14 @@ const editor = useEditor({
         Highlight,
         TaskList,
         TaskItem,
+        Underline,
         Collaboration.configure({
             document: ydoc,
         }),
         CollaborationCursor.configure({
             provider,
             user: {
-                name: 'Test User',
+                name: props.screenName,
                 color: colors[Math.floor(Math.random() * colors.length)],
             },
         }),
@@ -103,26 +106,16 @@ $min-height: 50vh;
 $max-height: 85vh;
 
 .editor {
-    display: flex;
-    flex-direction: column;
     min-height: $min-height;
     max-height: $max-height;
     background-color: #fff;
-    border: 2px solid #b5b5b5;
-    border-radius: 0.75rem;
+    //border: 2px solid #b5b5b5;
 
     &__header {
-        display: flex;
-        align-items: center;
-        flex: 0 0 auto;
-        flex-wrap: wrap;
-        padding: 0.25rem;
-        border-bottom: 2px solid #b5b5b5;
+        border-bottom: 1px solid #e5e5e5;
     }
 
     &__content {
-        padding: 0.75rem 1rem;
-        flex: 1 1 auto;
         overflow-x: hidden;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;

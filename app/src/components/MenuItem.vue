@@ -1,9 +1,9 @@
 <template>
-    <button class="button is-white" @click="props.action">
+    <button class="button is-white"  :class="{'is-active': props.isActive()}" @click="props.action">
         <span class="icon is-small">
             <i
                 class="fas"
-                :class="[iconClass, props.isActive() ? 'is-active' : '']"
+                :class="[iconClass]"
             ></i>
         </span>
         <span v-if="props.title">{{ props.title }}</span>

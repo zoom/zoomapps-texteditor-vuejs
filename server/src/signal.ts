@@ -5,7 +5,7 @@
 
 import ws from 'ws';
 import * as map from 'lib0/map';
-import { IncomingMessage, Server } from 'http';
+import { Server } from 'http';
 
 type message = {
     type?: string;

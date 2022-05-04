@@ -9,11 +9,18 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import '@/assets/scss/main.scss';
 
+import { ZoomSDK } from './types';
+declare global {
+    interface Window {
+        zoomSdk: ZoomSDK;
+    }
+}
+
 library.add(fas);
 dom.watch();
 
 const app = createApp(App);
+app.provide('zoomSdk', window.zoomSdk);
 
 app.component('font-awesome-icon', FontAwesomeIcon);
-
 app.use(store).use(router).mount('#app');

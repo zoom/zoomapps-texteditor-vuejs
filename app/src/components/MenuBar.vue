@@ -1,6 +1,10 @@
 <template>
-    <div class='buttons'>
-        <menu-item v-for='(item, i) in items' v-bind='item' :key='i' />
+    <div class='columns'>
+        <div class='column'>
+            <div class='buttons is-centered'>
+                <menu-item v-for='(item, i) in items' v-bind='item' :key='i' />
+            </div>
+        </div>
     </div>
 </template>
 
@@ -18,7 +22,7 @@ const items = [
     {
         icon: 'bold',
         action: () => props.editor.chain().focus().toggleBold().run(),
-        isActive: () => true,
+        isActive: () => props.editor.isActive('bold'),
     },
     {
         icon: 'italic',
@@ -27,7 +31,7 @@ const items = [
     },
     {
         icon: 'underline',
-        action: () => props.editor.chain().focus().toggle.run(),
+        action: () => props.editor.chain().focus().toggleUnderline().run(),
         isActive: () => props.editor.isActive('underline'),
     },
     {
