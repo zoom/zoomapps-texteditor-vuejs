@@ -1,93 +1,57 @@
-import dotenv from 'dotenv';
-import fs from 'fs';
-import dotenvExpand from 'dotenv-expand';
+import { URL } from 'url';
+import debug from 'debug';
 
-// Read .env directly to avoid adding secrets to the environment
-const fileName = '.env';
-const filePath = new URL(fileName, import.meta.url).pathname;
-
-if (!fs.existsSync(filePath))
-    throw new Error(`config file ${filePath} does not exist`);
-
-let buf: Buffer;
-
-try {
-    buf = fs.readFileSync(filePath);
-} catch (e: unknown) {
-    console.error('failed to read config: ', e);
-    process.exit(1);
+if (process.env.NODE_ENV !== 'production') {
+    const dotenv = await import('dotenv');
+    dotenv.config();
 }
 
-// Replace MongoDB connection string templates
-const config = dotenvExpand.expand({
-    ignoreProcessEnv: true,
-    parsed: dotenv.parse(buf),
-}).parsed;
-
-if (!config) {
-    console.error('dotenv failed to parse config');
-    process.exit(1);
-}
-
+const config = process.env;
 const deps = [
     'ZM_CLIENT_ID',
     'ZM_CLIENT_SECRET',
     'ZM_REDIRECT_URL',
-    'ZM_HOST',
     'SESSION_SECRET',
-    'MONGO_USER',
-    'MONGO_PASS',
-    'MONGO_URL',
-    'MONGO_KEY',
-    'MONGO_SIGN',
 ];
 
 // Check that we have all our config dependencies
-let hasMissing = false;
+let hasMissing = !config;
 for (const dep in deps) {
     const conf = deps[dep];
-    const val = config[conf];
+    const str = config[conf];
 
-    if (!val) {
+    if (!str || config[conf]) {
         console.error(`${conf} is required`);
         hasMissing = true;
     }
 }
 
-if (hasMissing) {
-    console.error('Missing required .env values...exiting');
-    process.exit(1);
-}
-
-const p = config.PORT || process.env.PORT;
+if (hasMissing) throw new Error('Missing required .env values...exiting');
 
 export const zoomApp = {
-    name: config.APP_NAME || 'za-server',
-    host: config.ZM_HOST,
-    clientId: config.ZM_CLIENT_ID,
-    clientSecret: config.ZM_CLIENT_SECRET,
-    redirectUri: config.ZM_REDIRECT_URL,
+    host: config.ZM_HOST || 'https://zoom.us',
+    clientId: config.ZM_CLIENT_ID as string,
+    clientSecret: config.ZM_CLIENT_SECRET as string,
+    redirectUrl: config.ZM_REDIRECT_URL as string,
+    sessionSecret: config.SESSION_SECRET as string,
 };
 
-// Zoom App Info
-export const appName = zoomApp.name;
-export const redirectUri = zoomApp.redirectUri;
+export const appName = config.APP_NAME || 'zoom-app';
+export const redirectUrl = zoomApp.redirectUrl as string;
+export const port = config.PORT || '3000';
 
-// MongoDB Session
-export const sessionSecret = config.SESSION_SECRET;
+const dbg = debug(`${config.APP_NAME}:config`);
 
-// MongoDB and Mongoose
-export const mongoURL = config.MONGO_URL;
-export const encryptionKey = config.MONGO_KEY;
-export const signingKey = config.MONGO_SIGN;
-
-// HTTP
-export const port = p || '3000';
+try {
+    new URL(config.ZM_REDIRECT_URL || '');
+} catch (e) {
+    if (!(e instanceof Error)) dbg(e);
+    else throw e;
+}
 
 // require secrets are explicitly imported
 export default {
     appName,
-    redirectUri,
+    redirectUrl,
     port,
-    mongoURL,
 };

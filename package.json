@@ -11,25 +11,22 @@
   ],
   "scripts": {
     "start": "node dist/index.js",
-    "build": "scripts/build.sh",
-    "dev": "scripts/dev.sh",
+    "build": "node scripts/build.sh",
+    "dev": "node scripts/dev.cjs",
     "prepare": "husky install",
     "prestart": "npm run build",
-    "postinstall": "chmod -R +x scripts && $_/gen-secrets.sh"
+    "postinstall": "node ./scripts/gen-secrets.js"
   },
   "devDependencies": {
     "concurrently": "^7.1.0",
     "dotenv-cli": "^5.1.0",
-    "husky": "^7.0.4",
-    "wait-on": "^6.0.1"
+    "envsub": "^4.0.7",
+    "husky": "^7.0.4"
   },
   "lint-staged": {
     "*.ts": [
       "eslint --cache --fix",
       "prettier --write"
     ]
-  },
-  "dependencies": {
-    "@types/websocket": "^1.0.5"
   }
 }

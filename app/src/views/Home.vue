@@ -1,6 +1,6 @@
 <template>
-    <div v-if="!isInMeeting" class="content">
-        {{ content }}
+    <div v-if="isInClient">
+        <h1>Start a meeting to use this app</h1>
     </div>
     <editor
         v-else
@@ -37,9 +37,9 @@ console.debug('Configuration', conf);
 
 store.commit('setContext', conf.runningContext);
 
-const isInMeeting = conf.runningContext === 'inMeeting';
+const isInClient = conf.runningContext === 'inMainClient';
 
-if (isInMeeting) {
+if (isInClient) {
     await zoomSdk.connect();
     const user = await zoomSdk.getUserContext();
     store.commit('setUser', user);

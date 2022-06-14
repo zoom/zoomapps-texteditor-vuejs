@@ -1,6 +1,5 @@
 import express from 'express';
 import axios from 'axios';
-import session from 'express-session';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import debug from 'debug';
@@ -8,7 +7,6 @@ import helmet from 'helmet';
 import logger from 'morgan';
 import { URL } from 'url';
 
-import db from './db.js';
 import { createHTTP } from './http.js';
 import signal from './signal.js';
 
@@ -18,30 +16,16 @@ import logAxios from './middleware/log-axios.js';
 
 import authRoutes from './routes/auth.js';
 
-import {
-    appName,
-    mongoURL,
-    port,
-    redirectUri,
-    sessionSecret,
-} from './config.js';
+import { appName, port, zoomApp } from './config.js';
 
 const dirname = (path: string) => new URL(path, import.meta.url).pathname;
 const dbg = debug(`${appName}:app`);
-
-// connect to MongoDB
-await db.connect(mongoURL);
-
-process.on('SIGINT', async () => {
-    await db.disconnect();
-    process.exit(1);
-});
 
 /* App Config */
 const app = express();
 app.set('port', port);
 
-const redirectHost = new URL(redirectUri).host;
+const redirectHost = new URL(zoomApp.redirectUrl).host;
 
 const publicDir = dirname('public');
 const viewDir = dirname('views');
@@ -88,22 +72,6 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(logger('dev', { stream: { write: (msg: string) => dbg(msg) } }));
 
-app.use(
-    session({
-        secret: sessionSecret,
-        resave: false,
-        saveUninitialized: true,
-        cookie: {
-            path: '/',
-            httpOnly: true,
-            secure: true,
-            sameSite: true,
-            maxAge: 365 * 24 * 60 * 60 * 1000,
-        },
-        store: db.createStore(),
-    })
-);
-
 // set up our server routes
 app.use('/auth', authRoutes);
 
@@ -131,7 +99,6 @@ try {
     await srvHttp.listen(port);
 } catch (e: unknown) {
     dbg(e);
-    await db.disconnect();
     process.exit(1);
 }
 

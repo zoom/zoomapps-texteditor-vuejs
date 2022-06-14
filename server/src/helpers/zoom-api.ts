@@ -66,7 +66,7 @@ export function getInstallURL() {
     const url = new URL('/oauth/authorize', zoomApp.host);
     url.searchParams.set('response_type', 'code');
     url.searchParams.set('client_id', zoomApp.clientId);
-    url.searchParams.set('redirect_uri', zoomApp.redirectUri);
+    url.searchParams.set('redirect_uri', zoomApp.redirectUrl);
     return url.href;
 }
 
@@ -80,7 +80,7 @@ export async function getToken(code: string) {
 
     const params = new URLSearchParams({
         code,
-        redirect_uri: zoomApp.redirectUri,
+        redirect_uri: zoomApp.redirectUrl,
         grant_type: 'authorization_code',
     });
     return tokenRequest(params);
