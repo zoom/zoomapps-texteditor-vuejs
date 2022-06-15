@@ -51,7 +51,7 @@ const ydoc = new Y.Doc();
 
 // Registered with a WebRTC provider
 const provider = new WebrtcProvider(props.meeting, ydoc, {
-    signaling: [`wss://${window.location.host}:3000`],
+    signaling: [`wss://${window.location.host}`],
 });
 
 const editor = useEditor({

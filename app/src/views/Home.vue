@@ -1,52 +1,53 @@
 <template>
-    <div v-if="isInClient">
+    <div v-if='isInClient'>
         <h1>Start a meeting to use this app</h1>
     </div>
     <editor
         v-else
-        :content="content"
-        :screenName="store.state.user.screenName"
-        :meeting="store.state.meetingUUID"
+        :content='content'
+        :screenName='store.state.user.screenName'
+        :meeting='store.state.meetingUUID'
     />
 </template>
 
-<script setup lang="ts">
-import Editor from '@/components/Editor';
+<script setup lang='ts'>
+import Editor from '@/components/Editor.vue';
 import { useStore } from 'vuex';
-import { computed, inject, watch } from 'vue';
-import { ZoomSDK } from './types';
+import { computed, inject } from 'vue';
+import { ZoomSDK } from '../types.js';
 
 const zoomSdk = inject('zoomSdk') as ZoomSDK;
 const store = useStore();
 
 const content = computed(() => store.state.content);
-const conf = await zoomSdk.config({
-    capabilities: [
-        'connect',
-        'getMeetingUUID',
-        'getRunningContext',
-        'getUserContext',
-        'onConnect',
-        'onMeeting',
-        'onMessage',
-        'onParticipantChange',
-        'postMessage',
-    ],
-});
-console.debug('Configuration', conf);
 
-store.commit('setContext', conf.runningContext);
+(async () => {
+    const conf = await zoomSdk.config({
+        capabilities: [
+            'connect',
+            'getMeetingUUID',
+            'getRunningContext',
+            'getUserContext',
+            'onConnect',
+            'onMeeting',
+            'onMessage',
+            'onParticipantChange',
+            'postMessage',
+        ],
+    });
+    console.debug('Configuration', conf);
 
-const isInClient = conf.runningContext === 'inMainClient';
+    store.commit('setContext', conf.runningContext);
 
-if (isInClient) {
-    await zoomSdk.connect();
-    const user = await zoomSdk.getUserContext();
-    store.commit('setUser', user);
+    const isInClient = conf.runningContext === 'inMainClient';
 
-    const { meetingUUID } = await zoomSdk.getMeetingUUID();
-    store.commit('setMeetingUUID', meetingUUID);
-}
+    if (isInClient) {
+        await zoomSdk.connect();
+        const user = await zoomSdk.getUserContext();
+        store.commit('setUser', user);
 
-
+        const { meetingUUID } = await zoomSdk.getMeetingUUID();
+        store.commit('setMeetingUUID', meetingUUID);
+    }
+})();
 </script>
