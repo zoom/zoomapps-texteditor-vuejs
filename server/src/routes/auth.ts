@@ -9,6 +9,7 @@ import { getDeeplink, getToken } from '../helpers/zoom-api.js';
 import session from '../session.js';
 
 import { appName } from '../config.js';
+import createError from 'http-errors';
 
 const dbg = debug(`${appName}:auth`);
 
@@ -27,11 +28,10 @@ const validateQuery = [
         .withMessage(`code must be > ${codeMin} and < ${codeMax} chars`)
         .escape(),
     query('state')
-        .optional()
         .isString()
         .withMessage('state must be a string')
-        .isLength({ max: stateMax })
-        .withMessage(`state must be < ${stateMax} chars`)
+        .custom((value, { req }) => value === req.session.state)
+        .withMessage('invalid state parameter')
         .escape(),
 ];
 
@@ -40,12 +40,15 @@ const validateQuery = [
  * The user is redirected to this route when they authorize your server
  */
 const authHandler = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.session) return createError(500, 'Cannot read session data');
+    req.session['state'] = null;
+
     try {
         // sanitize code and state query parameters
         await sanitize(req);
 
         const code = req.query.code;
-
+        const verifier = req.session['verifier'];
         // we have to check the type for TS so let's add an error too
         if (typeof code !== 'string') {
             const e = new Exception('invalid code parameter received', 400);
@@ -53,7 +56,7 @@ const authHandler = async (req: Request, res: Response, next: NextFunction) => {
         }
 
         // get Access Token from Zoom
-        const { access_token: accessToken } = await getToken(code);
+        const { access_token: accessToken } = await getToken(code, verifier);
 
         // fetch deeplink from Zoom API
         const deeplink = await getDeeplink(accessToken);

@@ -10,15 +10,12 @@ outDir='dist'
 [ -d "$outDir" ] && rm -r "$outDir"
 mkdir "$outDir"
 
-cp -r package-lock.json server/{.env,package.json,/src/views} "$outDir"
+cp -r package-lock.json server/package.json server/src/views "$outDir"
 
-npm run build -ws
+npm --prefix "$outDir" install "$outDir"
 
-if [ "${NODE_ENV:-}" != 'production' ]; then
-  cp -r server/.env "$outDir"
+ npm run build -ws
 
-  npm --prefix "$outDir" install "$outDir"
-fi
 
 cp -r app/dist "$outDir/public"
 

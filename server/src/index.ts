@@ -15,6 +15,7 @@ import errorHandler from './middleware/error-handler.js';
 import logAxios from './middleware/log-axios.js';
 
 import authRoutes from './routes/auth.js';
+import installRoutes from './routes/install.js';
 
 import { appName, port, zoomApp } from './config.js';
 
@@ -73,6 +74,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(logger('dev', { stream: { write: (msg: string) => dbg(msg) } }));
 
 // set up our server routes
+app.use('/', installRoutes);
 app.use('/auth', authRoutes);
 
 // Check each page for a Zoom Context Header

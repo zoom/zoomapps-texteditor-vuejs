@@ -3,7 +3,7 @@
  * @see https://github.com/yjs/y-webrtc/blob/master/bin/server.js
  */
 
-import ws from 'ws';
+import { WebSocket, WebSocketServer } from 'ws';
 import * as map from 'lib0/map';
 import { Server } from 'http';
 
@@ -18,7 +18,7 @@ const wsReadyStateOpen = 1;
 const timeout = 30000;
 const meetings = new Map();
 
-function send(conn: ws, msg: message) {
+function send(conn: WebSocket, msg: message) {
     const isConnecting = conn.readyState !== wsReadyStateConnecting;
     const isOpen = conn.readyState !== wsReadyStateOpen;
 
@@ -31,7 +31,7 @@ function send(conn: ws, msg: message) {
     }
 }
 
-function onConnect(wss: ws) {
+function onConnect(wss: WebSocket) {
     let closed = false;
     let pongReceived = true;
 
@@ -56,7 +56,7 @@ function onConnect(wss: ws) {
     wss.on('close', () => {
         subscribedTopics.forEach((topicName) => {
             const subs = meetings.get(topicName) || new Set();
-            subs.delete(ws);
+            subs.delete(WebSocket);
             if (subs.size === 0) {
                 meetings.delete(topicName);
             }
@@ -91,13 +91,13 @@ function onConnect(wss: ws) {
         } else if (msg.topic && msg.type === 'publish') {
             meetings
                 .get(msg.topic)
-                ?.forEach((receiver: ws) => send(receiver, msg));
+                ?.forEach((receiver: WebSocket) => send(receiver, msg));
         } else if (msg.type === 'ping') send(wss, { type: 'pong' });
     });
 }
 
 const config = (server: Server) => {
-    const wss = new ws.Server({ server });
+    const wss = new WebSocketServer({ server });
 
     wss.on('connection', onConnect);
 };

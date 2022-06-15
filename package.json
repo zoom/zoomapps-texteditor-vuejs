@@ -21,6 +21,7 @@
     "concurrently": "^7.1.0",
     "dotenv-cli": "^5.1.0",
     "envsub": "^4.0.7",
+    "fs-extra": "^10.1.0",
     "husky": "^7.0.4"
   },
   "lint-staged": {

@@ -3,6 +3,7 @@ import { Exception } from '../models/exception.js';
 
 import { handleError } from '../helpers/routing.js';
 import { contextHeader, getAppContext } from '../helpers/cipher.js';
+import { getInstallURL } from '../helpers/zoom-api.js';
 
 const maxLen = 512;
 
@@ -12,7 +13,7 @@ const maxLen = 512;
 export default () => (req: Request, res: Response, next: NextFunction) => {
     const header = req.header(contextHeader);
 
-    if (!header) return res.redirect('/install');
+    if (!header) return res.render('install');
 
     if (header.length > maxLen) {
         const e = new Exception(

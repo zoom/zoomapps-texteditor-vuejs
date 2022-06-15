@@ -3,11 +3,23 @@ import { URL } from 'url';
 import createError from 'http-errors';
 import { zoomApp } from '../config.js';
 
+import crypto from 'crypto';
+
+// returns a base64 encoded url
+const base64URL = (s: string) =>
+    s.toString().replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+
+// returns a random string of format fmt
+const rand = (fmt: string, depth = 32) =>
+    crypto.randomBytes(depth).toString(fmt as BufferEncoding);
+
 // Get Zoom API URL from Zoom Host value
 const host = new URL(zoomApp.host);
 host.hostname = host.hostname.replace(/^/, 'api.');
 
 const baseURL = host.href;
+
+// returns a random string of format fmt
 
 /**
  * Generic function for retrieving access or refresh tokens
@@ -20,7 +32,7 @@ function tokenRequest(params: URLSearchParams, id?: string, secret?: string) {
     const password = secret || zoomApp.clientSecret;
 
     return axios({
-        data: params.toString(),
+        data: new URLSearchParams(params).toString(),
         baseURL: zoomApp.host,
         url: '/oauth/token',
         method: 'POST',
@@ -49,37 +61,50 @@ function apiRequest(
         baseURL,
         url: `/v2${endpoint}`,
         headers: {
-            Authorization: getAuthHeader(token),
+            Authorization: `Bearer ${token}`,
         },
     }).then(({ data }) => Promise.resolve(data));
 }
 
-/**
- * Get the authorization header for the Zoom API
- * @param token - Access Token
- */
-export function getAuthHeader(token: string) {
-    return `Bearer ${token}`;
-}
-
 export function getInstallURL() {
+    const state = rand('base64');
+    const verifier = rand('ascii');
+
+    const digest = crypto
+        .createHash('sha256')
+        .update(verifier)
+        .digest('base64')
+        .toString();
+
+    const challenge = base64URL(digest);
+
     const url = new URL('/oauth/authorize', zoomApp.host);
+
     url.searchParams.set('response_type', 'code');
     url.searchParams.set('client_id', zoomApp.clientId);
     url.searchParams.set('redirect_uri', zoomApp.redirectUrl);
-    return url.href;
+    url.searchParams.set('code_challenge', challenge);
+    url.searchParams.set('code_challenge_method', 'S256');
+    url.searchParams.set('state', state);
+
+    return { url, state, verifier };
 }
 
 /**
  * Obtains an OAuth access token from Zoom
  * @param code - Authorization code from user authorization
+ * @param verifier - code verifier for PKCE
  */
-export async function getToken(code: string) {
+export async function getToken(code: string, verifier: string) {
     if (!code)
         throw createError(500, 'authorization code must be a valid string');
 
+    if (!verifier)
+        throw createError(500, 'code verifier code must be a valid string');
+
     const params = new URLSearchParams({
         code,
+        code_verifier: verifier,
         redirect_uri: zoomApp.redirectUrl,
         grant_type: 'authorization_code',
     });

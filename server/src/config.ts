@@ -1,14 +1,14 @@
 import { URL } from 'url';
 import debug from 'debug';
+import dotenv from 'dotenv';
 
-if (process.env.NODE_ENV !== 'production') {
-    (async () => {
-        const dotenv = await import('dotenv');
-        dotenv.config();
-    })();
-}
+const dirname = (path: string) => new URL(path, import.meta.url).pathname;
 
-const config = process.env;
+const config =
+    process.env.NODE_ENV === 'production'
+        ? process.env
+        : dotenv.config({ path: dirname('../.env') })?.parsed || process.env;
+
 const deps = [
     'ZM_CLIENT_ID',
     'ZM_CLIENT_SECRET',
@@ -22,7 +22,7 @@ for (const dep in deps) {
     const conf = deps[dep];
     const str = config[conf];
 
-    if (!str || config[conf]) {
+    if (!str) {
         console.error(`${conf} is required`);
         hasMissing = true;
     }
