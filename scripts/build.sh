@@ -5,16 +5,21 @@
 #
 
 set -eu
-
-export NODE_ENV='production'
 outDir='dist'
 
 [ -d "$outDir" ] && rm -r "$outDir"
 mkdir "$outDir"
 
+cp -r package-lock.json server/{.env,package.json,/src/views} "$outDir"
+
 npm run build -ws
 
-cp -r .env package-lock.json server/src/views server/package.json "$outDir"
+if [ "${NODE_ENV:-}" != 'production' ]; then
+  cp -r server/.env "$outDir"
+
+  npm --prefix "$outDir" install "$outDir"
+fi
+
 cp -r app/dist "$outDir/public"
 
 echo "$(basename "$0") - built to $PWD/$outDir folder"

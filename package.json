@@ -10,12 +10,12 @@
     "app"
   ],
   "scripts": {
-    "start": "node dist/index.js",
-    "build": "node scripts/build.sh",
+    "start": "npm --prefix dist run start",
+    "build": "scripts/build.sh",
     "dev": "node scripts/dev.cjs",
     "prepare": "husky install",
-    "prestart": "npm run build",
-    "postinstall": "node ./scripts/gen-secrets.js"
+    "prestart": "[[ -d dist/node_modules ]] || npm run build",
+    "postinstall": "node scripts/gen-secrets.mjs"
   },
   "devDependencies": {
     "concurrently": "^7.1.0",

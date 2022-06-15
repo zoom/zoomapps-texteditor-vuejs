@@ -95,11 +95,13 @@ const srvHttp = createHTTP(app);
 // start signaling websocket server for webrtc
 signal.config(srvHttp);
 
-try {
-    await srvHttp.listen(port);
-} catch (e: unknown) {
-    dbg(e);
-    process.exit(1);
-}
+(async () => {
+    try {
+        await srvHttp.listen(port);
+    } catch (e: unknown) {
+        dbg(e);
+        process.exit(1);
+    }
+})();
 
 export default app;

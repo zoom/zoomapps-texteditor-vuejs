@@ -2,8 +2,10 @@ import { URL } from 'url';
 import debug from 'debug';
 
 if (process.env.NODE_ENV !== 'production') {
-    const dotenv = await import('dotenv');
-    dotenv.config();
+    (async () => {
+        const dotenv = await import('dotenv');
+        dotenv.config();
+    })();
 }
 
 const config = process.env;
@@ -43,7 +45,7 @@ export const port = config.PORT || '3000';
 const dbg = debug(`${config.APP_NAME}:config`);
 
 try {
-    new URL(config.ZM_REDIRECT_URL || '');
+    new URL(config.ZM_REDIRECT_URL as string);
 } catch (e) {
     if (!(e instanceof Error)) dbg(e);
     else throw e;

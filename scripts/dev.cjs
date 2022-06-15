@@ -5,12 +5,12 @@ const n = pkg.name
 
 const {result} = concurrently([
         {
-            command: `APP_NAME='${n}' DEBUG='${n}*' nodemon app.js`,
+            command: `npm:dev -w server`,
             name: 'dev-server',
             prefixColor: 'inverse.cyan'
         },
         {
-            command: `rollup -c --watch`,
+            command: `npm:dev -w app`,
             name: 'dev-app',
             prefixColor: 'inverse.yellow'
 
