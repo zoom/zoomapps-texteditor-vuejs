@@ -1,8 +1,6 @@
-# Zoom App Vue Template
+# Zoom App Collaborative Text Editor
 
-Use of this sample server is subject to our [Terms of Use](https://zoom.us/docs/en-us/zoom_api_license_and_tou.html)
-
-This Zoom App Template uses Typescript + Vue.js to build a Hello World Zoom App.
+This Zoom App Template uses Typescript + Vue.js to build a collaborative text editor that lives right in your meeting!
 
 ## Prerequisites
 
@@ -52,22 +50,31 @@ Select the following OAuth scopes from the Scopes tab:
 
 ### Zoom JS SDK Features
 
-Choose these features from the Zoom JS SDK section of the Features tab:
+Enable Collaborate Mode and Choose these features from the Zoom JS SDK section of the Features tab:
 
-- shareApp
+- connect
+- getMeetingUUID
+- getRunningContext
+- getUserContext
+- onConnect
+- onMeeting
+- onMessage
+- onParticipantChange
+- postMessage
+
 
 ## Installation
 
 To get started clone the repo:
 
 ```shell
-git clone https://github.com/zoom/za-vue-template.git
+git clone https://github.com/zoom/zoomapps-texteditor-vuejs.git
 ```
 
-Once cloned navigate to the `za-vue-template` directory:
+Once cloned navigate to the `zoomapps-texteditor-vuejs` directory:
 
 ```
-cd za-vue-template
+cd zoomapps-texteditor-vuejs
 ```
 
 Then install dependencies. Docker will do this within the container, but it's useful to have local packages for
@@ -109,27 +116,19 @@ npm run dev
 
 The `dev` script will:
 
-1. Start mongodb in a container
-2. Watch Vue.js files and built to the dist/ folder
-3. Watch Server files and build to the dist/folder
-4. Start the application
+1. Watch Vue.js files and built to the dist/ folder
+1. Watch Server files and build to the dist/folder
+1. Start the application
 
 ### Production
 
-Make sure that you have configured production keys and secrets in your .env file or through the Secrets Manager of your
-cloud platform.
+When running your application in production no logs are sent to the console by default and the server is not restarted
+on file changes.
 
-Build for production
-
-```shell
-npm run build
-```
-
-Start the server
+We use the `NODE_ENV` environment variable here to tell the application to start in prodcution mode.
 
 ```shell
-cd dist
-npm start
+NODE_ENV=production npm start
 ````
 
 ## Usage
@@ -142,29 +141,11 @@ Install the Zoom App for your user:
 
 ## Deployment
 
-You can deploy this server on any service that allows you to host dynamic Node.js apps. You'll first want to make sure
-that you've configured a MongoDB server to connect to.
+You can deploy this server on any service that allows you to host dynamic Node.js apps
 
 1. [Heroku](https://devcenter.heroku.com/articles/deploying-nodejs)
 2. [Google Cloud](https://cloud.google.com/run/docs/quickstarts/build-and-deploy/nodejs)
 3. [AWS](https://aws.amazon.com/getting-started/hands-on/deploy-nodejs-web-app/)
-
-## Without Docker
-
-Building without Docker requires that you have an instance of MongoDB running natively or remotely, you've populated the
-.env with secrets, and you have adjusted the MongoDB credentials.
-
-The first step, as usual, is to enter your **Client ID**, **Client Secret** and **Redirect URI** for your Zoom App in
-the [.env](.env) file. The following steps are unique to building without Docker:
-
-##### Add your DB and Session Secrets
-
-Run `gen-secrets.sh` to generate development secrets or manually enter your own secrets for production.
-
-##### Change the MongoDB Connection String
-
-Change `MONGO_USER` and `MONGO_PASS` to match the user of your database. Then, adjust the format of `MONGO_URL` to match
-the connection string of your server.
 
 ## Contribution
 
@@ -173,9 +154,13 @@ install packages locally to pass pre-commit git hooks.
 
 ### Keeping secrets secret
 
-The application will use loaded data instead of pure environment variables. This adds an extra layer of protection for
-secrets while developing locally. In a production environment, you should use a Secret Manager from your hosting
-platform instead.
+This application makes use of your Zoom App Client ID and Client Secret as well as a custom secret for signing session
+cookies. During development, the application will read from the .env file. ;
+
+In order to align with security best
+practices, this application does not read from the .env file in production mode.
+
+This means you'll want to set environment variables on the hosting platform that you're using instead of within the .env file. This might include using a secret manager or a CI/CD pipeline.
 
 ### Code Style
 
