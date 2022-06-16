@@ -11,10 +11,10 @@
 </template>
 
 <script setup lang='ts'>
-import Editor from '@/components/Editor.vue';
+import Editor from '@/components/Editor';
 import { useStore } from 'vuex';
 import { computed, inject } from 'vue';
-import { ZoomSDK } from '../types.js';
+import { ZoomSDK } from '../types';
 
 const zoomSdk = inject('zoomSdk') as ZoomSDK;
 const store = useStore();
