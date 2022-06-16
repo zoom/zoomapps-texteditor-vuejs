@@ -1,8 +1,6 @@
-# Zoom App Vue Template
+# Zoom App Collaborative Text Editor
 
-Use of this sample server is subject to our [Terms of Use](https://zoom.us/docs/en-us/zoom_api_license_and_tou.html)
-
-This Zoom App Template uses Typescript + Vue.js to build a Hello World Zoom App.
+This Zoom App Template uses Typescript + Vue.js to build a collaborative text editor that lives right in your meeting!
 
 ## Prerequisites
 
@@ -52,16 +50,25 @@ Select the following OAuth scopes from the Scopes tab:
 
 ### Zoom JS SDK Features
 
-Choose these features from the Zoom JS SDK section of the Features tab:
+Enable Collaborate Mode and Choose these features from the Zoom JS SDK section of the Features tab:
 
-- shareApp
+- connect
+- getMeetingUUID
+- getRunningContext
+- getUserContext
+- onConnect
+- onMeeting
+- onMessage
+- onParticipantChange
+- postMessage
+
 
 ## Installation
 
 To get started clone the repo:
 
 ```shell
-git clone https://github.com/zoom/za-vue-template.git
+git clone https://github.com/zoom/zoomapps-texteditor-vuejs.git
 ```
 
 Once cloned navigate to the `zoomapps-texteditor-vuejs` directory:
