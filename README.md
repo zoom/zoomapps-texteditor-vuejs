@@ -115,20 +115,13 @@ The `dev` script will:
 
 ### Production
 
-Make sure that you have configured production keys and secrets in your .env file or through the Secrets Manager of your
-cloud platform.
+When running your application in production no logs are sent to the console by default and the server is not restarted
+on file changes.
 
-Build for production
-
-```shell
-npm run build
-```
-
-Start the server
+We use the `NODE_ENV` environment variable here to tell the application to start in prodcution mode.
 
 ```shell
-cd dist
-npm start
+NODE_ENV=production npm start
 ````
 
 ## Usage
@@ -141,29 +134,11 @@ Install the Zoom App for your user:
 
 ## Deployment
 
-You can deploy this server on any service that allows you to host dynamic Node.js apps. You'll first want to make sure
-that you've configured a MongoDB server to connect to.
+You can deploy this server on any service that allows you to host dynamic Node.js apps
 
 1. [Heroku](https://devcenter.heroku.com/articles/deploying-nodejs)
 2. [Google Cloud](https://cloud.google.com/run/docs/quickstarts/build-and-deploy/nodejs)
 3. [AWS](https://aws.amazon.com/getting-started/hands-on/deploy-nodejs-web-app/)
-
-## Without Docker
-
-Building without Docker requires that you have an instance of MongoDB running natively or remotely, you've populated the
-.env with secrets, and you have adjusted the MongoDB credentials.
-
-The first step, as usual, is to enter your **Client ID**, **Client Secret** and **Redirect URI** for your Zoom App in
-the [.env](.env) file. The following steps are unique to building without Docker:
-
-##### Add your DB and Session Secrets
-
-Run `gen-secrets.sh` to generate development secrets or manually enter your own secrets for production.
-
-##### Change the MongoDB Connection String
-
-Change `MONGO_USER` and `MONGO_PASS` to match the user of your database. Then, adjust the format of `MONGO_URL` to match
-the connection string of your server.
 
 ## Contribution
 
