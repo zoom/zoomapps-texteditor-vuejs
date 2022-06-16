@@ -64,10 +64,10 @@ To get started clone the repo:
 git clone https://github.com/zoom/za-vue-template.git
 ```
 
-Once cloned navigate to the `za-vue-template` directory:
+Once cloned navigate to the `zoomapps-texteditor-vuejs` directory:
 
 ```
-cd za-vue-template
+cd zoomapps-texteditor-vuejs
 ```
 
 Then install dependencies. Docker will do this within the container, but it's useful to have local packages for
@@ -109,10 +109,9 @@ npm run dev
 
 The `dev` script will:
 
-1. Start mongodb in a container
-2. Watch Vue.js files and built to the dist/ folder
-3. Watch Server files and build to the dist/folder
-4. Start the application
+1. Watch Vue.js files and built to the dist/ folder
+1. Watch Server files and build to the dist/folder
+1. Start the application
 
 ### Production
 
@@ -173,9 +172,13 @@ install packages locally to pass pre-commit git hooks.
 
 ### Keeping secrets secret
 
-The application will use loaded data instead of pure environment variables. This adds an extra layer of protection for
-secrets while developing locally. In a production environment, you should use a Secret Manager from your hosting
-platform instead.
+This application makes use of your Zoom App Client ID and Client Secret as well as a custom secret for signing session
+cookies. During development, the application will read from the .env file. ;
+
+In order to align with security best
+practices, this application does not read from the .env file in production mode.
+
+This means you'll want to set environment variables on the hosting platform that you're using instead of within the .env file. This might include using a secret manager or a CI/CD pipeline.
 
 ### Code Style
 
