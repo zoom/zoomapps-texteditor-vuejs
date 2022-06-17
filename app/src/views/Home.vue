@@ -20,6 +20,8 @@ const zoomSdk = inject('zoomSdk') as ZoomSDK;
 const store = useStore();
 
 const content = computed(() => store.state.content);
+const isInClient = computed(() => store.state.context === 'isMainClient');
+
 
 (async () => {
     const conf = await zoomSdk.config({
@@ -38,8 +40,6 @@ const content = computed(() => store.state.content);
     console.debug('Configuration', conf);
 
     store.commit('setContext', conf.runningContext);
-
-    const isInClient = conf.runningContext === 'inMainClient';
 
     if (isInClient) {
         await zoomSdk.connect();

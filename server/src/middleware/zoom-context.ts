@@ -3,7 +3,6 @@ import { Exception } from '../models/exception.js';
 
 import { handleError } from '../helpers/routing.js';
 import { contextHeader, getAppContext } from '../helpers/cipher.js';
-import { getInstallURL } from '../helpers/zoom-api.js';
 
 const maxLen = 512;
 

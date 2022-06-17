@@ -76,12 +76,12 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(logger('dev', { stream: { write: (msg: string) => dbg(msg) } }));
 
+// Check each page for a Zoom Context Header
+app.use(/\/|\*.html/g, zoomContext());
+
 // set up our server routes
 app.use('/', installRoutes);
 app.use('/auth', authRoutes);
-
-// Check each page for a Zoom Context Header
-app.use(/\/|\*.html/g, zoomContext());
 
 // handle server errors
 app.use(errorHandler());
