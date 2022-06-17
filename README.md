@@ -5,63 +5,12 @@ This Zoom App Template uses Typescript + Vue.js to build a collaborative text ed
 ## Prerequisites
 
 1. [Node JS](https://nodejs.org/en/)
-2. [Docker](https://docker.io/)
+2. [Ngrok](https://ngrok.com)
 3. [Zoom Account](https://support.zoom.us/hc/en-us/articles/207278726-Plan-Types-)
-4. [Zoom App Credentials]() (Instructions below)
+4. [Zoom App Credentials](#zoom-marketplace-configuration)
     1. Client ID
     2. Client Secret
-    3. Redirect URI
-
-### Create your Zoom App
-
-You can follow [this guide]() to create a Zoom App with the [Zoom Marketplace](https://marketplace.zoom.us/).
-
-### Client ID and Client Secret
-
-Once your server is created, you can obtain your Client ID and Client Secret from the App Credentials tab of your Zoom
-App.
-
-### Home URL and Redirect URL
-
-In order to use the Zoom App within Zoom you'll want to make sure that you're serving over HTTPS and your server is
-publicly accessible.
-
-The easiest way to accomplish this is to use a tool like [Ngrok](https://ngrok.com) with the port you're serving on:
-
-```shell
-ngrok http 3000
-```
-
-Use the Ngrok URL to configure your Zoom App on the Zoom Marketplace with the following information:
-
-1. Home Page: `{{ Ngrok URL }}/`
-2. Redirect URL: `{{ Ngrok URL }}/auth`
-
-**Example:** `https://foobar.ngrok.com:1234/auth`
-
-### Scopes
-
-Select the following OAuth scopes from the Scopes tab:
-
-- meeting:read
-- meeting:write
-- user:read
-- zoomapp:inmeeting
-
-### Zoom JS SDK Features
-
-Enable Collaborate Mode and Choose these features from the Zoom JS SDK section of the Features tab:
-
-- connect
-- getMeetingUUID
-- getRunningContext
-- getUserContext
-- onConnect
-- onMeeting
-- onMessage
-- onParticipantChange
-- postMessage
-
+    3. Redirect URL
 
 ## Installation
 
@@ -74,20 +23,65 @@ git clone https://github.com/zoom/zoomapps-texteditor-vuejs.git
 Once cloned navigate to the `zoomapps-texteditor-vuejs` directory:
 
 ```
-cd zoomapps-texteditor-vuejs
+cd zoomapps-text-editor-vuejs
 ```
 
-Then install dependencies. Docker will do this within the container, but it's useful to have local packages for
-development and for your IDE.
+Then install dependencies. This will automatically copy the .env.sample file to .env and set up the project.
 
 ```shell
 npm install
 ```
 
-## Setup
+In order to use the Zoom App within Zoom you'll want to make sure that you're serving over HTTPS and your server is
+publicly accessible.
 
+The easiest way to accomplish this is to use a tool like [Ngrok](https://ngrok.com) with the port you're serving on:
+
+```shell
+$ ngrok http 3000
+```
+
+## Zoom Marketplace Configuration
+Follow the steps below to configure your Zoom App within the Zoom Marketplace. For further instructions,
+see [this video series]() on how to create and configure these sample Zoom Apps.
+
+### Create your Zoom App
+You can follow [this guide](https://marketplace.zoom.us/docs/beta-docs/zoom-apps/createazoomapp) to create a Zoom App
+with the [Zoom Marketplace](https://marketplace.zoom.us/).
+
+### Client ID and Client Secret
+Once your app is created, you can obtain your Client ID and Client Secret from the App Credentials tab of your Zoom App.
+
+### Home URL and Redirect URL
+Use the Ngrok URL to configure your Zoom App on the Zoom Marketplace with the following information:
+
+1. Home Page: `https://example.ngrok.io`
+2. Redirect URL: `https://example.ngrok.io/auth`
+
+### Features Tab
+Enable Collaborate Mode for your app on this tab. Then, click the Add APIs button under the Zoom JS SDK section choose
+these APIs and Events:
+
+- **APIs**
+    - connect
+    - getMeetingUUID
+    - getRunningContext
+    - getUserContext
+    - postMessage
+- **Events**
+    - onConnect
+    - onMeeting
+    - onMessage
+    - onParticipantChange
+
+### Scopes Tab
+On the Scopes tab Select the following OAuth scopes from the Scopes tab:
+
+- zoomapp:inmeeting
+
+### Zoom App Secrets
 To start, fill out the [.env](.env) file with your **Client ID**, **Client Secret** and **Redirect URI** from your Zoom
-App. No other fields need to be updated for development and many will be generated in the next section.
+App. No other fields need to be updated for development.
 
 ```dotenv
 ZM_CLIENT_ID=...
@@ -157,10 +151,12 @@ install packages locally to pass pre-commit git hooks.
 This application makes use of your Zoom App Client ID and Client Secret as well as a custom secret for signing session
 cookies. During development, the application will read from the .env file. ;
 
-In order to align with security best
-practices, this application does not read from the .env file in production mode.
+In order to align with security best practices, this application does not read from the .env file in production mode.
 
-This means you'll want to set environment variables on the hosting platform that you're using instead of within the .env file. This might include using a secret manager or a CI/CD pipeline.
+This means you'll want to set environment variables on the hosting platform that you'
+re using instead of within the .env file. This might include using a secret manager or a CI/CD pipeline.
+
+> :warning: **Never commit your .env file to version control:** The file likely contains Zoom App Credentials and Session Secrets
 
 ### Code Style
 
