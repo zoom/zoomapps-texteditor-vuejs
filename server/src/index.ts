@@ -5,7 +5,8 @@ import cookieParser from 'cookie-parser';
 import debug from 'debug';
 import helmet from 'helmet';
 import logger from 'morgan';
-import { fileURLToPath, URL } from 'url';
+import path from 'upath';
+import { URL } from 'url';
 
 import { createHTTP } from './http.js';
 import signal from './signal.js';
@@ -18,9 +19,6 @@ import authRoutes from './routes/auth.js';
 import installRoutes from './routes/install.js';
 
 import { appName, port, zoomApp } from './config.js';
-import { dirname } from 'path';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const dbg = debug(`${appName}:app`);
 
@@ -30,13 +28,12 @@ app.set('port', port);
 
 const redirectHost = new URL(zoomApp.redirectUrl).host;
 
-const publicDir = `${__dirname}/public`;
-const viewDir = `${__dirname}/views`;
+const publicDir = path.resolve('public');
+const viewsDir = path.resolve('src/views');
 
 // we use server views to show server errors and prompt installs
 app.set('view engine', 'pug');
-app.set('views', viewDir);
-app.locals.basedir = publicDir;
+app.set('views', viewsDir);
 
 /*  Middleware */
 axios.interceptors.request.use(logAxios.request);

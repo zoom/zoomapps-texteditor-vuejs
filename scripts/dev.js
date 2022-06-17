@@ -11,10 +11,8 @@ if (process.platform === 'win32')
     command = `set "DEBUG=zoomapps*" & ${command}`;
 else command = `DEBUG="zoomapps*" ${command}`;
 
-await init(outDir)
 
-if (!fs.existsSync(`${outDir}/node_modules`))
-    await shell('npm', ['--prefix', outDir, 'install']);
+
 
 const { result } = concurrently([
     {
