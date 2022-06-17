@@ -1,13 +1,17 @@
 import { URL } from 'url';
 import debug from 'debug';
 import dotenv from 'dotenv';
+import path from 'upath';
 
-const dirname = (path: string) => new URL(path, import.meta.url).pathname;
+if (process.env.NODE_ENV !== 'production') {
+    const result = dotenv.config({ path: path.resolve('../.env') });
 
-const config =
-    process.env.NODE_ENV === 'production'
-        ? process.env
-        : dotenv.config({ path: dirname('../.env') })?.parsed || process.env;
+    if (result.error) {
+        throw result.error;
+    }
+}
+
+const config = process.env;
 
 const deps = [
     'ZM_CLIENT_ID',
