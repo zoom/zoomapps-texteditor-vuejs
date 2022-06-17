@@ -15,5 +15,4 @@ export const init = async (outDir) => {
     } catch (e) {
         console.error(e);
     }
-
 };
