@@ -1,23 +1,24 @@
 {
-  "name": "collaborative-za-sample",
+  "name": "zoomapps-texteditor-vuejs",
   "version": "1.0.0",
   "description": "A Zoom App Template",
   "private": true,
   "license": "MIT",
   "main": "dist/index.js",
+  "type": "module",
   "workspaces": [
     "server",
     "app"
   ],
   "scripts": {
     "start": "npm --prefix dist run start",
-    "build": "scripts/build.sh",
-    "dev": "node scripts/dev.cjs",
+    "build": "node scripts/build.js",
+    "dev": "node scripts/dev.js",
     "prepare": "husky install",
-    "prestart": "[[ -d dist/node_modules ]] || npm run build",
-    "postinstall": "node scripts/gen-secrets.mjs"
+    "postinstall": "node scripts/gen-secrets.cjs"
   },
   "devDependencies": {
+    "await-spawn": "^4.0.2",
     "concurrently": "^7.1.0",
     "dotenv-cli": "^5.1.0",
     "envsub": "^4.0.7",

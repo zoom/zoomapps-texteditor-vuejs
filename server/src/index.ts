@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import debug from 'debug';
 import helmet from 'helmet';
 import logger from 'morgan';
-import { URL } from 'url';
+import { fileURLToPath, URL } from 'url';
 
 import { createHTTP } from './http.js';
 import signal from './signal.js';
@@ -18,8 +18,10 @@ import authRoutes from './routes/auth.js';
 import installRoutes from './routes/install.js';
 
 import { appName, port, zoomApp } from './config.js';
+import { dirname } from 'path';
 
-const dirname = (path: string) => new URL(path, import.meta.url).pathname;
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 const dbg = debug(`${appName}:app`);
 
 /* App Config */
@@ -28,8 +30,8 @@ app.set('port', port);
 
 const redirectHost = new URL(zoomApp.redirectUrl).host;
 
-const publicDir = dirname('public');
-const viewDir = dirname('views');
+const publicDir = `${__dirname}/public`;
+const viewDir = `${__dirname}/views`;
 
 // we use server views to show server errors and prompt installs
 app.set('view engine', 'pug');
@@ -53,11 +55,12 @@ app.use(
         referrerPolicy: {
             policy: 'same-origin',
         },
+        crossOriginEmbedderPolicy: false,
         contentSecurityPolicy: {
             directives: {
                 'default-src': origins,
                 styleSrc: origins,
-                scriptSrc: origins,
+                scriptSrc: ['https://appssdk.zoom.us/sdk.min.js', ...origins],
                 imgSrc: ["'self'", 'data:', `https://${redirectHost}`],
                 'connect-src': ["'self'", `wss://${redirectHost}`],
                 'base-uri': 'self',
