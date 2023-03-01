@@ -8,13 +8,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node --experimental-specifier-resolution=node --loader ts-node/esm ./src/index.ts",
+    "start-dev": "node --experimental-specifier-resolution=node --loader ts-node/esm ./src/index.ts",
     "build": "tsc -b",
-    "dev": "tsc-watch --outDir ../dist --noClear --onSuccess 'npm run start'"
+    "dev": "tsc-watch --outDir ../dist --noClear --onSuccess \"npm run start-dev\""
   },
   "dependencies": {
     "axios": "^0.26.0",
     "compression": "^1.7.4",
-    "connect-mongo": "^4.6.0",
     "cookie-parser": "~1.4.6",
     "cookie-session": "^2.0.0",
     "debug": "~4.3.3",
@@ -23,7 +23,6 @@
     "express-validator": "^6.14.0",
     "helmet": "^5.0.2",
     "http-errors": "^2.0.0",
-    "https-localhost": "^4.7.1",
     "morgan": "~1.10.0",
     "pug": "^3.0.2",
     "ws": "^8.5.0"
@@ -38,6 +37,7 @@
     "@types/morgan": "^1.9.3",
     "@types/node": "^17.0.23",
     "@types/websocket": "^1.0.5",
+    "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
     "eslint": "^8.12.0",

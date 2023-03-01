@@ -18,7 +18,7 @@ Open your terminal:
 
 ```bash
 # Clone down this repository
-git clone git@github.com/zoom/zoomapps-texteditor-vuejs
+git clone git@github.com:zoom/zoomapps-texteditor-vuejs.git
 
 # navigate into the cloned project directory
 cd zoomapps-texteditor-vuejs
@@ -64,6 +64,12 @@ Redirect URL for OAuth: https://xxxxx.ngrok.io/auth
 
 - `appssdk.zoom.us`
 - `ngrok.io`
+- `signaling.yjs.dev`
+- `y-webrtc-signaling-eu.herokuapp.com`
+- `y-webrtc-signaling-us.herokuapp.com`
+
+> NOTE: This sample application uses the public heroku signaling servers provided by the Y.js organization, as such any information your app synchronizes through their services is considered non-private. However you can create and host your own signaling server using the information for the y-webrtc library -- https://github.com/yjs/y-webrtc#signaling
+
 
 ### Config: Information
 
@@ -119,18 +125,18 @@ configured:
 
 ```ini
 # Client ID for your Zoom App
-ZM_CLIENT_ID=[app_client_id]
+ZOOM_CLIENT_ID=[app_client_id]
 
 # Client Secret for your Zoom app
-ZM_CLIENT_SECRET=[app_client_id]
+ZOOM_CLIENT_SECRET=[app_client_id]
 
 # Redirect URI set for your app in the Zoom Marketplace
-ZM_REDIRECT_URL=https://[xxxx-xx-xx-xxx-x].ngrok.io/auth
+ZOOM_REDIRECT_URL=https://[xxxx-xx-xx-xxx-x].ngrok.io/auth
 ```
 
 #### Zoom for Government
 
-If you are a [Zoom for Government (ZfG)](https://www.zoomgov.com/) customer you can use the `ZM_HOST` variable to change
+If you are a [Zoom for Government (ZfG)](https://www.zoomgov.com/) customer you can use the `ZOOM_HOST` variable to change
 the base URL used for Zoom. This will allow you to adjust to the different Marketplace and API Base URLs used by ZfG
 customers.
 
@@ -150,8 +156,8 @@ npm run dev
 
 The `dev` script will:
 
-1. Watch Vue.js files and built to the dist/ folder
-1. Watch Server files and build to the dist/ folder
+1. Watch Vue.js files and built to the `server/public/` folder
+1. Watch Server files and build to the `dist/` folder
 1. Start the application
 
 ### Production

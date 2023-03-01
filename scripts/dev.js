@@ -21,7 +21,7 @@ const { result } = concurrently([
         prefixColor: 'inverse.cyan',
     },
     {
-        command: `npm:dev -w app`,
+        command: `npm:dev -w client`,
         name: 'dev-app',
         prefixColor: 'inverse.yellow',
     },

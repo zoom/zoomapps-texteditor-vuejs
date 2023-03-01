@@ -1,8 +1,8 @@
-import express from 'express';
 import axios from 'axios';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import debug from 'debug';
+import express from 'express';
 import helmet from 'helmet';
 import logger from 'morgan';
 import path from 'upath';
@@ -59,7 +59,13 @@ app.use(
                 styleSrc: origins,
                 scriptSrc: ['https://appssdk.zoom.us/sdk.min.js', ...origins],
                 imgSrc: ["'self'", 'data:', `https://${redirectHost}`],
-                'connect-src': ["'self'", `wss://${redirectHost}`],
+                'connect-src': [
+                    "'self'",
+                    `wss://${redirectHost}`,
+                    'wss://signaling.yjs.dev/',
+                    'wss://y-webrtc-signaling-eu.herokuapp.com/',
+                    'wss://y-webrtc-signaling-us.herokuapp.com/',
+                ],
                 'base-uri': 'self',
                 'form-action': 'self',
             },

@@ -35,7 +35,7 @@ for (const dep in deps) {
 if (hasMissing) throw new Error('Missing required .env values...exiting');
 
 export const zoomApp = {
-    host: config.ZM_HOST || 'https://zoom.us',
+    host: config.ZOOM_HOST || 'https://zoom.us',
     clientId: config.ZM_CLIENT_ID as string,
     clientSecret: config.ZM_CLIENT_SECRET as string,
     redirectUrl: config.ZM_REDIRECT_URL as string,
@@ -44,7 +44,7 @@ export const zoomApp = {
 
 export const appName = config.APP_NAME || 'zoom-app';
 export const redirectUrl = zoomApp.redirectUrl as string;
-export const port = config.PORT || '3000';
+export const port = config.PORT || 3000;
 
 const dbg = debug(`${config.APP_NAME}:config`);
 
